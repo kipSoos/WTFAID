@@ -245,7 +245,7 @@
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div class="flex items-center gap-2.5">
             <div>
-              <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white"><span id="p-title-ind">Phase 1</span> - Market & Macro Indicators</h2>
+              <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white"><span id="p-title-ind">Phase 1</span> - Tên Phase 1 </h2>
               <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Đánh giá bối cảnh vĩ mô, tình trạng thanh khoản và lịch đáo hạn OMO</p>
             </div>
             <button onclick="openGuideModal()" class="w-7 h-7 rounded-full bg-emerald-100 hover:bg-emerald-200 dark:bg-sky-950 dark:hover:bg-sky-900 text-emerald-700 dark:text-sky-300 flex items-center justify-center text-xs font-bold border border-emerald-300 dark:border-sky-700 shadow-sm transition shrink-0 ml-1" title="Hướng dẫn cách chơi & chức năng">
@@ -261,7 +261,7 @@
             <div class="app-card rounded-xl p-3.5 sm:p-4 border-l-4 border-emerald-500 dark:border-sky-500">
               <h4 class="text-[11px] sm:text-xs font-bold uppercase text-emerald-600 dark:text-sky-400 mb-1.5">Scenario Briefing</h4>
               <p id="scenario-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                Thanh khoản hệ thống ngân hàng đang chịu áp lực thiếu hụt ngắn hạn. Lãi suất liên ngân hàng nhích lên 3.95%. Nhiệm vụ: Đấu thầu khối lượng để bơm tiền ổn định thị trường.
+                Actual scenario: still pending
               </p>
             </div>
 
@@ -276,23 +276,23 @@
                   <thead>
                     <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 text-[11px] font-bold">
                       <th class="py-1.5 px-2 text-left">Công cụ</th>
-                      <th class="py-1.5 px-2 text-center">Số lượng (Tỷ)</th>
+                      <th class="py-1.5 px-2 text-center">Khối lượng (Tỷ)</th>
                       <th class="py-1.5 px-2 text-right">Lãi suất (%)</th>
                     </tr>
                   </thead>
                   <tbody id="maturity-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Số lượng tín phiếu 90N</td>
+                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng tín phiếu 90N</td>
                       <td id="mat-tb-bill-vol" class="text-center font-bold text-emerald-600 dark:text-sky-400">15,000</td>
                       <td id="mat-tb-bill-rate" class="text-right text-slate-700 dark:text-slate-300">3.433%</td>
                     </tr>
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Số lượng Repo 60N</td>
+                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Repo 60N</td>
                       <td id="mat-tb-repo-vol" class="text-center font-bold text-rose-600 dark:text-rose-400">2,000</td>
                       <td id="mat-tb-repo-rate" class="text-right text-slate-700 dark:text-slate-300">3.146%</td>
                     </tr>
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Số lượng Reverse Repo 60N</td>
+                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200"> lượng Reverse Repo 60N</td>
                       <td id="mat-tb-rev-vol" class="text-center font-bold text-amber-600 dark:text-amber-400">2,000</td>
                       <td id="mat-tb-rev-rate" class="text-right text-slate-700 dark:text-slate-300">3.300%</td>
                     </tr>
@@ -818,7 +818,7 @@
     const phaseConfig = {
       1: {
         title: "Phase 1",
-        scenario: "Thanh khoản hệ thống ngân hàng đang chịu áp lực thiếu hụt ngắn hạn. Lãi suất liên ngân hàng nhích lên 3.95%. Nhiệm vụ: Đấu thầu khối lượng để bơm tiền ổn định thị trường.",
+        scenario: "scenario still pending. plz wait for a week",
         method: "volume",
         action: "repo",
         defaultVol: 5000,
@@ -841,7 +841,7 @@
       },
       2: {
         title: "Phase 2",
-        scenario: "Thị trường tiền tệ xuất hiện sự phân hóa thanh khoản giữa các nhóm ngân hàng. Cần thực hiện Đấu thầu Lãi suất để tìm mức lãi suất cân bằng thực sự.",
+        scenario: "Scenario also still pending. Continue wait faster",
         method: "rate",
         action: "repo",
         defaultVol: 8000,
@@ -864,7 +864,7 @@
       },
       3: {
         title: "Phase 3",
-        scenario: "Lạm phát CPI có xu hướng gia tăng chạm mốc 4.28%. NHTW cần chủ động điều tiết thanh khoản qua Reverse Repo để kiểm soát lạm phát mà không gây sốc tăng trưởng.",
+        scenario: "Also still pending. Almost done",
         method: "volume",
         action: "reverse_repo",
         defaultVol: 6000,
