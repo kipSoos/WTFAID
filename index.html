@@ -101,52 +101,106 @@
   <!-- TOAST NOTIFICATION CONTAINER -->
   <div id="toast-container" class="fixed top-4 right-4 z-50 max-w-sm w-full pointer-events-none"></div>
 
-  <!-- HOW TO PLAY & FUNCTION GUIDE MODAL -->
-  <div id="guide-modal" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-    <div class="app-card rounded-2xl max-w-2xl w-full p-5 sm:p-6 space-y-4 max-h-[90vh] overflow-y-auto relative shadow-2xl border border-slate-300 dark:border-slate-700">
-      <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
-        <div class="flex items-center gap-2">
-          <span class="text-xl">📘</span>
-          <h3 class="text-sm sm:text-base font-black uppercase text-emerald-600 dark:text-sky-400">Hướng Dẫn Chơi & Giải Thích Chức Năng (OMO Manual)</h3>
+  <!-- GUIDE MODAL (WHAT TO KNOW 101 - MANUAL FILE) -->
+  <div id="guide-modal" onclick="if(event.target === this) closeGuideModal()" class="fixed inset-0 z-50 hidden flex items-center justify-center p-3 sm:p-4 bg-slate-900/70 backdrop-blur-sm transition-opacity">
+    <div class="app-card rounded-2xl p-4 sm:p-6 max-w-3xl w-full max-h-[90vh] flex flex-col shadow-2xl border border-slate-200 dark:border-slate-700 relative animate-slide-down">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-700 shrink-0">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-emerald-100 dark:bg-sky-950 flex items-center justify-center border border-emerald-300 dark:border-sky-700">
+            <span class="text-emerald-700 dark:text-sky-300 font-extrabold text-sm">i</span>
+          </div>
+          <div>
+            <h3 class="text-base sm:text-lg font-black uppercase tracking-wider text-emerald-600 dark:text-sky-400">WHAT TO KNOW 101</h3>
+            <p class="text-[11px] text-slate-500 dark:text-slate-400">Tệp Hướng dẫn Chi tiết & Quy tắc Điều hành OMO</p>
+          </div>
         </div>
-        <button onclick="closeGuideModal()" class="w-7 h-7 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-500 font-bold flex items-center justify-center">✕</button>
+        <button onclick="closeGuideModal()" class="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+        </button>
       </div>
-
-      <div class="space-y-4 text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-        <div>
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <span>🎯</span> 1. Mục tiêu điều hành của NHTW
+      
+      <!-- Modal Body -->
+      <div class="overflow-y-auto my-4 pr-1.5 space-y-4 text-xs sm:text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+        
+        <!-- Section 1 -->
+        <div class="p-4 rounded-xl bg-emerald-50/70 dark:bg-slate-900/70 border border-emerald-200 dark:border-slate-700 space-y-2">
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 text-xs sm:text-sm">
+            <span class="w-5 h-5 rounded bg-emerald-600 text-white flex items-center justify-center text-[10px]">1</span>
+            Mục Tiêu Điều Hành Của NHTW (Central Bank Target)
           </h4>
-          <p>Đóng vai Ban Điều hành Nghiệp vụ Thị trường Mở (NHTW). Bạn cần đưa ra các quyết định bơm/hút tiền qua OMO để ổn định lãi suất liên ngân hàng, giải tỏa nghẽn thanh khoản hệ thống và kiểm soát lạm phát mà vẫn hỗ trợ tăng trưởng GDP.</p>
-        </div>
-
-        <div>
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <span>📊</span> 2. Các chỉ số quan trọng (Indicators)
-          </h4>
-          <ul class="list-disc pl-4 space-y-1">
-            <li><strong>Interbank Rate (Lãi suất LNH):</strong> Phản ứng trực tiếp và ngay lập tức sau mỗi phiên OMO.</li>
-            <li><strong>Liquidity Demand (Nhu cầu thanh khoản):</strong> Mức độ thừa/thiếu hụt tiền mặt của hệ thống ngân hàng.</li>
-            <li><strong>Schedule of Maturity (Lịch đáo hạn):</strong> Khối lượng tín phiếu & Repo/Reverse Repo đến hạn bơm hoặc rút tiền tự động khỏi hệ thống.</li>
-            <li><strong>CPI & GDP:</strong> Tác động vĩ mô có độ trễ dài hạn (phát huy tác dụng qua các Phase sau).</li>
+          <p class="text-xs sm:text-sm leading-relaxed">
+            Bạn đóng vai <strong>Ban Điều hành Nghiệp vụ Thị trường Mở (NHTW)</strong>. Nhiệm vụ chính là đưa ra các quyết định bơm hoặc rút tiền thông qua OMO để:
+          </p>
+          <ul class="list-disc pl-5 text-xs space-y-1">
+            <li><strong>Ổn định Lãi suất Liên ngân hàng (Interbank Rate):</strong> Giữ cho chi phí vốn ngắn hạn giữa các ngân hàng thương mại không biến động quá mức.</li>
+            <li><strong>Giải tỏa Nghẽn Thanh khoản:</strong> Đáp ứng kịp thời nhu cầu dư/thiếu hụt tiền mặt trong hệ thống.</li>
+            <li><strong>Kiểm soát Lạm phát (CPI) & Hỗ trợ Tăng trưởng (GDP):</strong> Cân bằng bài toán vĩ mô dài hạn.</li>
           </ul>
         </div>
 
-        <div>
-          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider mb-1 flex items-center gap-1.5">
-            <span>⚙️</span> 3. Các công cụ quyết định OMO (Decision Console)
+        <!-- Section 2 -->
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 space-y-2">
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 text-xs sm:text-sm">
+            <span class="w-5 h-5 rounded bg-sky-600 text-white flex items-center justify-center text-[10px]">2</span>
+            Các Chỉ Số Vĩ Mô Key (Indicators & Metrics)
           </h4>
-          <ul class="list-disc pl-4 space-y-1">
-            <li><strong>Auction Method:</strong> <em>Volume Auction</em> (NHTW ấn định lãi suất, NHTM đăng ký khối lượng) hoặc <em>Interest Rate Auction</em> (NHTW ấn định khối lượng, NHTM tự chào lãi suất cạnh tranh).</li>
-            <li><strong>Pricing Method:</strong> <em>Single-price</em> (Áp dụng 1 mức giá chung) hoặc <em>Multiple-price</em> (Áp dụng đa giá theo bid).</li>
-            <li><strong>OMO Action:</strong> <em>Repo / Buy Securities</em> (Bơm thanh khoản) hoặc <em>Reverse Repo / Sell Securities</em> (Hút thanh khoản).</li>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 text-xs">
+            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">Interbank Rate (Lãi suất LNH):</strong>
+              Phản ứng trực tiếp & tức thì ngay sau mỗi phiên OMO.
+            </div>
+            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">Liquidity Demand (Nhu cầu thanh khoản):</strong>
+              Mức dư (+) hoặc thiếu hụt (-) tiền mặt hệ thống.
+            </div>
+            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">Maturity Schedule (Lịch đáo hạn):</strong>
+              Khối lượng Tín phiếu & Repo tự động đến hạn bơm/rút tiền.
+            </div>
+            <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
+              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">CPI & GDP Growth:</strong>
+              Các chỉ số vĩ mô phát huy tác dụng qua nhiều kỳ (độ trễ dài hơn).
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3 -->
+        <div class="p-4 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-700 space-y-2">
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 text-xs sm:text-sm">
+            <span class="w-5 h-5 rounded bg-emerald-600 text-white flex items-center justify-center text-[10px]">3</span>
+            Công Cụ & Phương Thức Đấu Thầu (OMO Console)
+          </h4>
+          <ul class="list-disc pl-5 text-xs space-y-1.5">
+            <li><strong>Repo / Mua giấy tờ có giá:</strong> Bơm thanh khoản vào hệ thống thương mại.</li>
+            <li><strong>Reverse Repo / Phát hành Tín phiếu:</strong> Rút bớt tiền dư thừa khỏi hệ thống.</li>
+            <li><strong>Volume Auction (Đấu thầu khối lượng):</strong> NHTW ấn định trước lãi suất, NHTM đăng ký khối lượng mua.</li>
+            <li><strong>Interest Rate Auction (Đấu thầu lãi suất):</strong> NHTW ấn định khối lượng chào thầu, các NHTM tự đặt mức lãi suất cạnh tranh.</li>
           </ul>
         </div>
+
+        <!-- Section 4 -->
+        <div class="p-4 rounded-xl bg-amber-50/60 dark:bg-slate-900/70 border border-amber-200 dark:border-slate-700 space-y-1">
+          <h4 class="font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 text-xs sm:text-sm">
+            <span class="w-5 h-5 rounded bg-amber-600 text-white flex items-center justify-center text-[10px]">4</span>
+            Lời Khuyên Đạt Điểm Cao (Tips)
+          </h4>
+          <p class="text-xs">
+            Luôn quan sát <strong>Scenario Briefing</strong> ở mỗi Phase để đưa ra đúng nghiệp vụ (Bơm hay Rút) và tính toán khối lượng thầu vừa đủ giải quyết thiếu hụt thanh khoản mà không gây rủi ro lạm phát vượt trần!
+          </p>
+        </div>
+
       </div>
 
-      <div class="pt-2 border-t border-slate-200 dark:border-slate-800 flex justify-end">
-        <button onclick="closeGuideModal()" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 dark:bg-sky-600 dark:hover:bg-sky-500 text-white font-bold rounded-xl text-xs transition">Đã Hiểu</button>
+      <!-- Modal Footer -->
+      <div class="pt-3 border-t border-slate-200 dark:border-slate-700 shrink-0 flex items-center justify-between">
+        <span class="text-[11px] text-slate-500 font-mono hidden sm:inline">Nhấn ESC hoặc click bên ngoài để đóng</span>
+        <button onclick="closeGuideModal()" class="w-full sm:w-auto px-6 py-2.5 bg-emerald-600 hover:bg-emerald-500 dark:bg-sky-600 dark:hover:bg-sky-500 text-white text-xs font-bold rounded-xl transition shadow-md">
+          ĐÃ ĐỌC HƯỚNG DẪN & ĐÓNG
+        </button>
       </div>
+
     </div>
   </div>
 
@@ -164,22 +218,33 @@
     </div>
 
     <div class="flex flex-wrap items-center justify-center md:justify-end gap-2 shrink-0">
+      
+      <!-- Theme Toggle -->
       <button onclick="toggleTheme()" id="theme-toggle-btn" class="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg nav-box text-xs font-bold transition border shadow-sm">
         <span id="theme-icon">☀️</span>
         <span id="theme-text" class="text-slate-700 dark:text-slate-200">Light</span>
       </button>
 
+      <!-- WHAT TO KNOW 101 Info Button -->
+      <button onclick="openGuideModal()" id="guide-btn" title="Mở tệp hướng dẫn OMO" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg nav-box text-xs font-bold transition border shadow-sm text-emerald-700 dark:text-sky-300 hover:bg-emerald-50 dark:hover:bg-slate-700">
+        <div class="w-4 h-4 rounded-full bg-emerald-600 dark:bg-sky-500 text-white flex items-center justify-center text-[10px] font-black">i</div>
+        <span>WHAT TO KNOW 101</span>
+      </button>
+
+      <!-- Phase Stepper -->
       <div id="phase-stepper" class="hidden flex items-center gap-1 nav-box p-1 rounded-lg border text-[11px] sm:text-xs font-semibold">
         <span id="badge-p1" class="px-2.5 py-1 rounded bg-emerald-600 dark:bg-sky-600 text-white font-bold">P1</span>
         <span id="badge-p2" class="px-2.5 py-1 rounded text-slate-500 dark:text-slate-400">P2</span>
         <span id="badge-p3" class="px-2.5 py-1 rounded text-slate-500 dark:text-slate-400">P3</span>
       </div>
 
+      <!-- Main App Tabs -->
       <nav id="nav-tabs" class="hidden flex gap-1 nav-box p-1 rounded-lg border overflow-x-auto">
         <button onclick="switchTab('indicators')" id="tab-btn-indicators" class="px-2.5 sm:px-3 py-1 rounded-md text-xs font-bold bg-emerald-600 dark:bg-sky-600 text-white whitespace-nowrap">Indicators</button>
         <button onclick="switchTab('decisions')" id="tab-btn-decisions" class="px-2.5 sm:px-3 py-1 rounded-md text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white whitespace-nowrap">Decisions</button>
         <button onclick="switchTab('results')" id="tab-btn-results" disabled class="px-2.5 sm:px-3 py-1 rounded-md text-xs font-semibold text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50 whitespace-nowrap" title="Cần gửi Quyết định OMO trước khi xem Kết quả">Results 🔒</button>
       </nav>
+
     </div>
   </header>
 
@@ -187,6 +252,7 @@
 
     <!-- START SCREEN -->
     <section id="slide-title" class="flex flex-col items-center justify-center text-center py-4 sm:py-8 min-h-[70vh] space-y-6">
+      
       <div class="app-card rounded-3xl p-6 sm:p-8 md:p-10 w-full max-w-3xl shadow-xl relative overflow-hidden border border-slate-200 dark:border-slate-800">
         <div class="inline-block px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-sky-950 border border-emerald-300 dark:border-sky-700 text-emerald-800 dark:text-sky-300 text-[11px] sm:text-xs font-bold tracking-wider uppercase mb-3 sm:mb-4">
           Central Bank OMO Policy Simulator
@@ -202,10 +268,15 @@
         </p>
       </div>
 
+      <!-- SETUP CARD WITH PROMINENT WHAT TO KNOW 101 BAR -->
       <div class="app-card rounded-2xl p-5 sm:p-6 w-full max-w-xl text-left space-y-4 shadow-lg border border-slate-200 dark:border-slate-800">
-        <div class="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 pb-3">
-          <span class="text-lg">⚙️</span>
-          <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-600 dark:text-sky-400">Thiết Lập Đội Chơi & Chế Độ Simulation</h3>
+        
+        <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 pb-3">
+          <div class="flex items-center gap-2">
+            <span class="text-lg">⚙️</span>
+            <h3 class="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-600 dark:text-sky-400">Thiết Lập Đội Chơi</h3>
+          </div>
+          <span class="text-[11px] font-mono text-slate-400">Single Player Mode</span>
         </div>
 
         <div>
@@ -213,19 +284,25 @@
           <input type="text" id="inputTeamName" value="Nhóm 1 – Central Bankers" maxlength="30" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
         </div>
 
-        <div>
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Chọn Chế Độ Chơi:</label>
-          <select id="selectMode" onchange="toggleRoomCodeInput()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
-            <option value="standard" selected>Standard Simulation (Single Team / 1 Mình)</option>
-            <option value="team_comp">Team Challenge Mode (Multiplayer Real-time)</option>
-          </select>
-        </div>
-
-        <div id="roomCodeContainer" class="hidden space-y-1 transition-all duration-300">
-          <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Mã Phòng Thi Đấu (Room Code):</label>
-          <input type="text" id="inputRoomId" value="ROOM-888" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-bold font-mono text-emerald-600 dark:text-sky-400 uppercase focus:outline-none focus:border-emerald-500 shadow-sm" placeholder="Nhập mã phòng chung...">
-          <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 leading-snug">Các nhóm nhập cùng Mã Phòng sẽ thi đấu real-time và xuất hiện trên Bảng Xếp Hạng chung.</p>
-        </div>
+        <!-- WHAT TO KNOW 101 INTERACTIVE BAR WITH ICON (i) -->
+        <button type="button" onclick="openGuideModal()" class="w-full flex items-center justify-between p-3.5 sm:p-4 rounded-xl bg-emerald-50 hover:bg-emerald-100/90 dark:bg-slate-900/80 dark:hover:bg-slate-800 border border-emerald-300 dark:border-sky-700 transition group text-left shadow-sm">
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-emerald-600 dark:bg-sky-500 text-white flex items-center justify-center font-black text-base shadow-sm group-hover:scale-110 transition-transform">
+              i
+            </div>
+            <div>
+              <div class="text-xs sm:text-sm font-bold uppercase tracking-wider text-emerald-800 dark:text-sky-300 flex items-center gap-1.5">
+                <span>WHAT TO KNOW 101</span>
+                <span class="px-2 py-0.2 rounded bg-emerald-200 dark:bg-sky-950 text-emerald-900 dark:text-sky-200 text-[10px] font-mono">Tệp hướng dẫn</span>
+              </div>
+              <div class="text-[11px] text-slate-600 dark:text-slate-400 font-medium">Bấm để đọc tệp hướng dẫn & quy tắc điều hành OMO</div>
+            </div>
+          </div>
+          <div class="flex items-center gap-1 text-xs font-bold text-emerald-600 dark:text-sky-400 group-hover:translate-x-1 transition-transform shrink-0">
+            <span>Mở tệp</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          </div>
+        </button>
 
         <div class="pt-2">
           <button onclick="startGame()" 
@@ -234,6 +311,7 @@
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
           </button>
         </div>
+
       </div>
     </section>
 
@@ -245,12 +323,9 @@
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div class="flex items-center gap-2.5">
             <div>
-              <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white"><span id="p-title-ind">Phase 1</span> - Tên Phase 1 </h2>
+              <h2 id="p-title-ind" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
               <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Đánh giá bối cảnh vĩ mô, tình trạng thanh khoản và lịch đáo hạn OMO</p>
             </div>
-            <button onclick="openGuideModal()" class="w-7 h-7 rounded-full bg-emerald-100 hover:bg-emerald-200 dark:bg-sky-950 dark:hover:bg-sky-900 text-emerald-700 dark:text-sky-300 flex items-center justify-center text-xs font-bold border border-emerald-300 dark:border-sky-700 shadow-sm transition shrink-0 ml-1" title="Hướng dẫn cách chơi & chức năng">
-              ⓘ
-            </button>
           </div>
         </div>
 
@@ -261,7 +336,7 @@
             <div class="app-card rounded-xl p-3.5 sm:p-4 border-l-4 border-emerald-500 dark:border-sky-500">
               <h4 class="text-[11px] sm:text-xs font-bold uppercase text-emerald-600 dark:text-sky-400 mb-1.5">Scenario Briefing</h4>
               <p id="scenario-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
-                Actual scenario: still pending
+                Scenario pending
               </p>
             </div>
 
@@ -276,25 +351,25 @@
                   <thead>
                     <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 text-[11px] font-bold">
                       <th class="py-1.5 px-2 text-left">Công cụ</th>
-                      <th class="py-1.5 px-2 text-center">Khối lượng (Tỷ)</th>
+                      <th class="py-1.5 px-2 text-center">Khối lượng (Tỷ VND)</th>
                       <th class="py-1.5 px-2 text-right">Lãi suất (%)</th>
                     </tr>
                   </thead>
                   <tbody id="maturity-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng tín phiếu 90N</td>
+                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Tín phiếu 90N</td>
                       <td id="mat-tb-bill-vol" class="text-center font-bold text-emerald-600 dark:text-sky-400">15,000</td>
-                      <td id="mat-tb-bill-rate" class="text-right text-slate-700 dark:text-slate-300">3.433%</td>
+                      <td id="mat-tb-bill-rate" class="text-right text-slate-700 dark:text-slate-300">3.43%</td>
                     </tr>
                     <tr>
                       <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Repo 60N</td>
                       <td id="mat-tb-repo-vol" class="text-center font-bold text-rose-600 dark:text-rose-400">2,000</td>
-                      <td id="mat-tb-repo-rate" class="text-right text-slate-700 dark:text-slate-300">3.146%</td>
+                      <td id="mat-tb-repo-rate" class="text-right text-slate-700 dark:text-slate-300">3.15%</td>
                     </tr>
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200"> lượng Reverse Repo 60N</td>
+                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Reverse Repo 60N</td>
                       <td id="mat-tb-rev-vol" class="text-center font-bold text-amber-600 dark:text-amber-400">2,000</td>
-                      <td id="mat-tb-rev-rate" class="text-right text-slate-700 dark:text-slate-300">3.300%</td>
+                      <td id="mat-tb-rev-rate" class="text-right text-slate-700 dark:text-slate-300">3.30%</td>
                     </tr>
                   </tbody>
                 </table>
@@ -346,14 +421,16 @@
       <section id="tab-content-decisions" class="hidden space-y-5">
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white"><span id="p-title-dec">Phase 1</span> - Policy Decision Console</h2>
+            <h2 id="p-title-dec" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
             <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Thiết lập thông số đấu thầu OMO để điều tiết lượng cung tiền</p>
           </div>
         </div>
 
         <div class="app-card rounded-xl p-3.5 sm:p-4 border-l-4 border-emerald-500 dark:border-sky-500">
           <h4 class="text-[11px] sm:text-xs font-bold uppercase text-emerald-600 dark:text-sky-400 mb-1">Scenario Briefing</h4>
-          <p id="decision-scenario-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">chỗ này sẽ update scenario sau</p>
+          <p id="decision-scenario-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+            Scenario pending
+          </p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
@@ -440,7 +517,7 @@
       <section id="tab-content-results" class="hidden space-y-6">
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h2 class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white"><span id="p-title-res">Phase 1</span> - OMO Execution Report</h2>
+            <h2 id="p-title-res" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
             <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Kết quả truyền dẫn chính sách vĩ mô và bảng tổng hợp phản ứng thị trường</p>
           </div>
           <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-sky-950 text-emerald-800 dark:text-sky-300 text-[11px] sm:text-xs font-bold border border-emerald-300 dark:border-sky-700">EXECUTION COMPLETE</span>
@@ -451,14 +528,14 @@
           <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
             <div>
               <span class="text-[11px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400">Policy Assessment</span>
-              <h3 id="res-eval-title" class="text-base sm:text-lg font-black text-emerald-600 dark:text-sky-400">Tối ưu hiệu quả truyền dẫn (Optimal Transmission)</h3>
+              <h3 id="res-eval-title" class="text-base sm:text-lg font-black text-emerald-600 dark:text-sky-400">Will be updates so stay tuned</h3>
             </div>
             <span class="px-3 py-1 rounded-lg bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-bold text-xs border border-emerald-300 dark:border-emerald-800">
               ⚡ Đã Thực Thi
             </span>
           </div>
           <p id="res-analysis" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium mt-3 border-t border-slate-200 dark:border-slate-800 pt-3">
-            Chỗ này sẽ có explanation cho player
+            YOLO
           </p>
         </div>
 
@@ -609,35 +686,6 @@
             </div>
           </div>
 
-          <!-- MULTIPLAYER LEADERBOARD CARD -->
-          <div id="multiplayer-scoreboard-card" class="app-card rounded-2xl p-4 sm:p-5 text-left border border-slate-200 dark:border-slate-800 space-y-3">
-            <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="text-base">🏆</span>
-                <h4 class="text-xs font-bold text-emerald-600 dark:text-sky-400 uppercase tracking-wider">MULTIPLAYER LEADERBOARD (REAL-TIME)</h4>
-              </div>
-              <span id="scoreboard-room-tag" class="px-2.5 py-1 rounded-md bg-emerald-100 dark:bg-sky-950 text-emerald-800 dark:text-sky-300 text-[10px] font-mono font-bold">Room: ROOM-888</span>
-            </div>
-
-            <div class="overflow-x-auto -mx-2 sm:mx-0">
-              <table class="w-full text-xs sim-table border-collapse min-w-[480px]">
-                <thead>
-                  <tr class="bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 font-bold">
-                    <th class="w-12 text-center">Hạng</th>
-                    <th>Tên Nhóm</th>
-                    <th class="text-center">Phase 1</th>
-                    <th class="text-center">Phase 2</th>
-                    <th class="text-center">Phase 3</th>
-                    <th class="text-center">Điểm TB</th>
-                  </tr>
-                </thead>
-                <tbody id="multiplayer-leaderboard-body" class="divide-y divide-slate-200 dark:divide-slate-800 font-mono">
-                  <tr><td colspan="6" class="text-center py-3 text-slate-400 font-sans">Chưa có dữ liệu thi đấu trong phòng này.</td></tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
           <!-- GOVERNOR'S OVERALL REVIEW -->
           <div class="app-card rounded-2xl p-5 sm:p-6 text-left border border-slate-200 dark:border-slate-800 space-y-2">
             <h4 class="text-xs font-bold text-emerald-600 dark:text-sky-400 uppercase tracking-wider">
@@ -659,230 +707,125 @@
     </div>
   </main>
 
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-    import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-    import { getFirestore, doc, setDoc, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-    let db = null;
-    let auth = null;
-    let currentUserId = null;
-    let roomId = "ROOM-888";
-    let activeTeamsData = [];
-
-    async function initFirebase() {
-      try {
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'omo-simulator-app';
-        let firebaseConfig = null;
-
-        if (typeof __firebase_config !== 'undefined' && __firebase_config) {
-          firebaseConfig = JSON.parse(__firebase_config);
-        }
-
-        if (firebaseConfig) {
-          const app = initializeApp(firebaseConfig);
-          auth = getAuth(app);
-          db = getFirestore(app);
-
-          if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-            await signInWithCustomToken(auth, __initial_auth_token);
-          } else {
-            await signInAnonymously(auth);
-          }
-
-          currentUserId = auth.currentUser ? auth.currentUser.uid : 'user_' + Math.random().toString(36).substr(2, 8);
-          listenToLeaderboard(appId);
-        }
-      } catch (err) {
-        console.warn("Real-time sync initialized in local fallback mode:", err);
-      }
-    }
-
-    function listenToLeaderboard(appId) {
-      if (!db) return;
-      const scoresCol = collection(db, 'artifacts', appId, 'public', 'data', 'scores');
-      
-      onSnapshot(scoresCol, (snapshot) => {
-        activeTeamsData = [];
-        snapshot.forEach((doc) => {
-          const data = doc.data();
-          if (data.roomId === roomId) {
-            activeTeamsData.push(data);
-          }
-        });
-
-        activeTeamsData.sort((a, b) => {
-          const avgA = ( (a.scores?.p1 || 0) + (a.scores?.p2 || 0) + (a.scores?.p3 || 0) ) / 3;
-          const avgB = ( (b.scores?.p1 || 0) + (b.scores?.p2 || 0) + (b.scores?.p3 || 0) ) / 3;
-          return avgB - avgA;
-        });
-
-        renderMultiplayerLeaderboard();
-      }, (error) => {
-        console.error("Leaderboard Realtime Sync Error:", error);
-      });
-    }
-
-    async function syncScoreToCloud() {
-      if (!db || !currentUserId) return;
-      try {
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'omo-simulator-app';
-        const teamDocRef = doc(db, 'artifacts', appId, 'public', 'data', 'scores', `${roomId}_${currentUserId}`);
-
-        const p1 = window.scores?.p1 || 0;
-        const p2 = window.scores?.p2 || 0;
-        const p3 = window.scores?.p3 || 0;
-
-        await setDoc(teamDocRef, {
-          userId: currentUserId,
-          teamName: window.teamName || "Nhóm 1 – Central Bankers",
-          roomId: roomId,
-          mode: document.getElementById('selectMode')?.value || 'team_comp',
-          scores: { p1, p2, p3 },
-          currentPhase: window.currentPhase || 1,
-          updatedAt: Date.now()
-        }, { merge: true });
-      } catch (err) {
-        console.error("Error pushing score update:", err);
-      }
-    }
-
-    function renderMultiplayerLeaderboard() {
-      const tbody = document.getElementById('multiplayer-leaderboard-body');
-      if (!tbody) return;
-
-      const roomTag = document.getElementById('scoreboard-room-tag');
-      if (roomTag) roomTag.innerText = `Room: ${roomId}`;
-
-      if (activeTeamsData.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="6" class="text-center py-3 text-slate-400 font-sans">Chưa có dữ liệu thi đấu trong phòng này.</td></tr>`;
-        return;
-      }
-
-      let html = "";
-      activeTeamsData.forEach((team, idx) => {
-        const isCurrentTeam = team.userId === currentUserId;
-        const highlightClass = isCurrentTeam ? "bg-emerald-50 dark:bg-sky-950/50 font-bold border-l-4 border-emerald-500" : "";
-        const rankMedal = idx === 0 ? "🥇" : idx === 1 ? "🥈" : idx === 2 ? "🥉" : `#${idx + 1}`;
-        
-        const p1 = team.scores?.p1 || 0;
-        const p2 = team.scores?.p2 || 0;
-        const p3 = team.scores?.p3 || 0;
-        const count = (p1 ? 1 : 0) + (p2 ? 1 : 0) + (p3 ? 1 : 0);
-        const avgScore = count > 0 ? Math.round((p1 + p2 + p3) / count) : '-';
-
-        html += `
-          <tr class="${highlightClass} hover:bg-slate-100 dark:hover:bg-slate-800/80">
-            <td class="text-center font-bold">${rankMedal}</td>
-            <td class="font-sans font-bold text-slate-800 dark:text-slate-100 flex items-center gap-1.5">
-              ${team.teamName}
-              ${isCurrentTeam ? '<span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-600 text-white font-mono">BẠN</span>' : ''}
-            </td>
-            <td class="text-center font-mono">${p1 || '-'}</td>
-            <td class="text-center font-mono">${p2 || '-'}</td>
-            <td class="text-center font-mono">${p3 || '-'}</td>
-            <td class="text-center font-mono font-bold text-emerald-600 dark:text-sky-400">${avgScore}</td>
-          </tr>
-        `;
-      });
-
-      tbody.innerHTML = html;
-    }
-
-    window.initFirebase = initFirebase;
-    window.syncScoreToCloud = syncScoreToCloud;
-    window.renderMultiplayerLeaderboard = renderMultiplayerLeaderboard;
-
-    window.addEventListener('DOMContentLoaded', () => {
-      initFirebase();
-      if (typeof window.toggleRoomCodeInput === 'function') {
-        window.toggleRoomCodeInput();
-      }
-    });
-  </script>
-
   <script>
-    // CORE APPLICATION LOGIC & GLOBAL SCOPE BINDINGS
+    let currentPhase = 1;
+    let teamName = "Nhóm 1 – Central Bankers";
+    let scores = { p1: null, p2: null, p3: null };
     let currentTheme = 'light';
+    let isResultUnlocked = false;
     let chartInstance = null;
     let macroResultsChartInstance = null;
-    let teamName = "Nhóm 1 – Central Bankers";
-    let isResultUnlocked = false;
-    let currentPhase = 1;
-    let scores = { p1: 0, p2: 0, p3: 0 };
-
-    window.scores = scores;
-    window.currentPhase = currentPhase;
-    window.teamName = teamName;
 
     const phaseConfig = {
       1: {
-        title: "Phase 1",
-        scenario: "scenario still pending. plz wait for a week",
+        title: "Phase 1: Phase 1",
+        scenario: "Scenario pending",
+        indicators: {
+          gdp: "3.40%",
+          cpi: "3.97%",
+          interbank: "3.95%",
+          liquidity: "-1,900 Tỷ"
+        },
+        matTable: {
+          billVol: "15,000",
+          billRate: "3.43%",
+          repoVol: "2,000",
+          repoRate: "3.15%",
+          revVol: "2,000",
+          revRate: "3.30%"
+        },
         method: "volume",
         action: "repo",
         defaultVol: 5000,
         defaultRate: 4.00,
-        indicators: { gdp: "3.40%", cpi: "3.97%", interbank: "3.95%", liquidity: "-1,900 Tỷ" },
-        preMetrics: { rate: 3.95, liq: -1900, dep: 4.95, cpi: 3.97, gdp: 3.40 },
         chartData: [3.95, 3.95, 3.95, 3.95],
-        matTable: {
-          billVol: "15,000", billRate: "3.433%",
-          repoVol: "2,000", repoRate: "3.146%",
-          revVol: "2,000", revRate: "3.300%"
+        preMetrics: {
+          rate: 3.95,
+          liq: -1900,
+          dep: 4.95,
+          cpi: 3.97,
+          gdp: 3.40
         },
         bankBids: [
-          { bank: "Bank A", rate: 4.10, vol: 2000 },
-          { bank: "Bank B", rate: 4.05, vol: 1500 },
-          { bank: "Bank C", rate: 4.00, vol: 1500 },
-          { bank: "Bank D", rate: 3.90, vol: 1000 },
-          { bank: "Bank E", rate: 3.85, vol: 500 }
+          { bank: "Bank A", rate: 4.00, vol: 1500, awarded: 0, status: "" },
+          { bank: "Bank B", rate: 4.00, vol: 1200, awarded: 0, status: "" },
+          { bank: "Bank C", rate: 4.00, vol: 1000, awarded: 0, status: "" },
+          { bank: "Bank D", rate: 4.00, vol: 800, awarded: 0, status: "" },
+          { bank: "Bank E", rate: 4.00, vol: 1000, awarded: 0, status: "" }
         ]
       },
       2: {
-        title: "Phase 2",
-        scenario: "Scenario also still pending. Continue wait faster",
+        title: "Phase 2: Phase 2",
+        scenario: "Yep it still pending, plz wait",
+        indicators: {
+          gdp: "3.45%",
+          cpi: "3.95%",
+          interbank: "4.10%",
+          liquidity: "-3,500 Tỷ"
+        },
+        matTable: {
+          billVol: "10,000",
+          billRate: "3.50%",
+          repoVol: "5,000",
+          repoRate: "3.80%",
+          revVol: "1,000",
+          revRate: "3.20%"
+        },
         method: "rate",
         action: "repo",
-        defaultVol: 8000,
-        defaultRate: 4.25,
-        indicators: { gdp: "3.45%", cpi: "4.10%", interbank: "4.15%", liquidity: "-3,200 Tỷ" },
-        preMetrics: { rate: 4.15, liq: -3200, dep: 5.10, cpi: 4.10, gdp: 3.45 },
-        chartData: [3.95, 4.02, 4.10, 4.15],
-        matTable: {
-          billVol: "10,000", billRate: "3.550%",
-          repoVol: "3,000", repoRate: "3.220%",
-          revVol: "1,500", revRate: "3.350%"
+        defaultVol: 6000,
+        defaultRate: 4.15,
+        chartData: [3.80, 3.92, 4.02, 4.10],
+        preMetrics: {
+          rate: 4.10,
+          liq: -3500,
+          dep: 5.10,
+          cpi: 3.95,
+          gdp: 3.45
         },
         bankBids: [
-          { bank: "Bank A", rate: 4.35, vol: 3000 },
-          { bank: "Bank B", rate: 4.30, vol: 3000 },
-          { bank: "Bank C", rate: 4.25, vol: 2000 },
-          { bank: "Bank D", rate: 4.15, vol: 2000 },
-          { bank: "Bank E", rate: 4.10, vol: 1000 }
+          { bank: "Bank A", rate: 4.25, vol: 2000, awarded: 0, status: "" },
+          { bank: "Bank B", rate: 4.20, vol: 1800, awarded: 0, status: "" },
+          { bank: "Bank C", rate: 4.15, vol: 1500, awarded: 0, status: "" },
+          { bank: "Bank D", rate: 4.10, vol: 1200, awarded: 0, status: "" },
+          { bank: "Bank E", rate: 4.05, vol: 1000, awarded: 0, status: "" }
         ]
       },
       3: {
-        title: "Phase 3",
-        scenario: "Also still pending. Almost done",
+        title: "Phase 3: Phase 3",
+        scenario: "STILL STILL pending, wait faster!",
+        indicators: {
+          gdp: "3.52%",
+          cpi: "4.23%",
+          interbank: "3.20%",
+          liquidity: "+6,000 Tỷ"
+        },
+        matTable: {
+          billVol: "5,000",
+          billRate: "3.60%",
+          repoVol: "1,000",
+          repoRate: "3.50%",
+          revVol: "8,000",
+          revRate: "3.65%"
+        },
         method: "volume",
         action: "reverse_repo",
-        defaultVol: 6000,
-        defaultRate: 4.50,
-        indicators: { gdp: "3.35%", cpi: "4.28%", interbank: "4.35%", liquidity: "+1,500 Tỷ" },
-        preMetrics: { rate: 4.35, liq: 1500, dep: 5.30, cpi: 4.28, gdp: 3.35 },
-        chartData: [4.15, 4.22, 4.30, 4.35],
-        matTable: {
-          billVol: "8,000", billRate: "3.620%",
-          repoVol: "4,000", repoRate: "3.300%",
-          revVol: "3,000", revRate: "3.450%"
+        defaultVol: 5000,
+        defaultRate: 3.50,
+        chartData: [3.85, 3.60, 3.40, 3.20],
+        preMetrics: {
+          rate: 3.20,
+          liq: 6000,
+          dep: 4.70,
+          cpi: 4.23,
+          gdp: 3.52
         },
         bankBids: [
-          { bank: "Bank A", rate: 4.60, vol: 2500 },
-          { bank: "Bank B", rate: 4.50, vol: 2500 },
-          { bank: "Bank C", rate: 4.45, vol: 2000 },
-          { bank: "Bank D", rate: 4.35, vol: 1500 },
-          { bank: "Bank E", rate: 4.25, vol: 1000 }
+          { bank: "Bank A", rate: 3.50, vol: 1800, awarded: 0, status: "" },
+          { bank: "Bank B", rate: 3.50, vol: 1500, awarded: 0, status: "" },
+          { bank: "Bank C", rate: 3.50, vol: 1200, awarded: 0, status: "" },
+          { bank: "Bank D", rate: 3.50, vol: 1000, awarded: 0, status: "" },
+          { bank: "Bank E", rate: 3.50, vol: 1000, awarded: 0, status: "" }
         ]
       }
     };
@@ -899,47 +842,45 @@
 
     function toggleTheme() {
       const html = document.documentElement;
+      const themeIcon = document.getElementById('theme-icon');
+      const themeText = document.getElementById('theme-text');
+      
       if (currentTheme === 'light') {
+        currentTheme = 'dark';
         html.classList.remove('light');
         html.classList.add('dark');
-        currentTheme = 'dark';
-        document.getElementById('theme-icon').innerText = '🌙';
-        document.getElementById('theme-text').innerText = 'Dark';
+        if (themeIcon) themeIcon.innerText = '🌙';
+        if (themeText) themeText.innerText = 'Dark';
       } else {
+        currentTheme = 'light';
         html.classList.remove('dark');
         html.classList.add('light');
-        currentTheme = 'light';
-        document.getElementById('theme-icon').innerText = '☀️';
-        document.getElementById('theme-text').innerText = 'Light';
+        if (themeIcon) themeIcon.innerText = '☀️';
+        if (themeText) themeText.innerText = 'Light';
       }
+
       if (phaseConfig[currentPhase]) {
         renderChart(phaseConfig[currentPhase].chartData);
       }
     }
 
-    function toggleRoomCodeInput() {
-      const selectMode = document.getElementById('selectMode');
-      const roomCodeContainer = document.getElementById('roomCodeContainer');
-      if (selectMode && roomCodeContainer) {
-        if (selectMode.value === 'team_comp') {
-          roomCodeContainer.classList.remove('hidden');
-        } else {
-          roomCodeContainer.classList.add('hidden');
-        }
+    function toggleRateVisibility() {
+      const method = document.getElementById('auctionMethod').value;
+      const rateContainer = document.getElementById('rateContainer');
+      const pricingContainer = document.getElementById('pricingContainer');
+      
+      if (method === 'rate') {
+        if (rateContainer) rateContainer.classList.add('hidden');
+        if (pricingContainer) pricingContainer.classList.remove('hidden');
+      } else {
+        if (rateContainer) rateContainer.classList.remove('hidden');
+        if (pricingContainer) pricingContainer.classList.add('hidden');
       }
     }
 
-    function toggleRateVisibility() {
-      const method = document.getElementById('auctionMethod').value;
-      const pricingContainer = document.getElementById('pricingContainer');
-      const rateContainer = document.getElementById('rateContainer');
-      if (method === 'rate') {
-        if (pricingContainer) pricingContainer.classList.remove('hidden');
-        if (rateContainer) rateContainer.classList.add('hidden');
-      } else {
-        if (pricingContainer) pricingContainer.classList.add('hidden');
-        if (rateContainer) rateContainer.classList.remove('hidden');
-      }
+    function setFixedVolume(val) {
+      const input = document.getElementById('volumeInput');
+      if (input) input.value = val;
     }
 
     function showToast(message, type = 'info') {
@@ -947,69 +888,65 @@
       if (!container) return;
       
       const toast = document.createElement('div');
-      toast.className = `animate-slide-down pointer-events-auto mb-2 p-3 sm:p-4 rounded-xl shadow-lg border text-xs font-bold flex items-center justify-between ${
-        type === 'success' ? 'bg-emerald-600 text-white border-emerald-500' :
-        type === 'warning' ? 'bg-amber-500 text-white border-amber-400' :
-        'bg-slate-800 text-white border-slate-700'
-      }`;
-      toast.innerHTML = `<span>${message}</span><button onclick="this.parentElement.remove()" class="ml-2 opacity-70 hover:opacity-100 text-sm">✕</button>`;
+      const bgClass = type === 'success' ? 'bg-emerald-600' : type === 'warning' ? 'bg-amber-600' : 'bg-sky-600';
+      
+      toast.className = `${bgClass} text-white px-4 py-3 rounded-xl shadow-xl flex items-center justify-between gap-3 text-xs sm:text-sm font-semibold transform transition-all duration-300 translate-y-2 opacity-0 pointer-events-auto mb-2`;
+      toast.innerHTML = `
+        <span>${message}</span>
+        <button onclick="this.parentElement.remove()" class="text-white hover:opacity-80 font-bold">&times;</button>
+      `;
       
       container.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.classList.remove('translate-y-2', 'opacity-0');
+      });
+      
       setTimeout(() => {
-        if (toast.parentElement) toast.remove();
-      }, 4000);
+        if (toast.parentElement) {
+          toast.classList.add('opacity-0', '-translate-y-2');
+          setTimeout(() => toast.remove(), 300);
+        }
+      }, 3500);
     }
 
     function startGame() {
-      teamName = document.getElementById('inputTeamName').value || "Nhóm 1 – Central Bankers";
-      window.teamName = teamName;
-      
-      document.getElementById('current-team-name').innerText = teamName;
-      document.getElementById('header-team-badge').classList.remove('hidden');
-      document.getElementById('header-team-badge').classList.add('flex');
+      const inputEl = document.getElementById('inputTeamName');
+      if (inputEl && inputEl.value.trim()) {
+        teamName = inputEl.value.trim();
+      } else {
+        teamName = "Group 1";
+      }
 
+      document.getElementById('current-team-name').innerText = teamName;
       document.getElementById('slide-title').classList.add('hidden');
       document.getElementById('slide-app').classList.remove('hidden');
+      
+      document.getElementById('header-team-badge').classList.remove('hidden');
       document.getElementById('phase-stepper').classList.remove('hidden');
-      document.getElementById('phase-stepper').classList.add('flex');
       document.getElementById('nav-tabs').classList.remove('hidden');
-      document.getElementById('nav-tabs').classList.add('flex');
-
-      currentPhase = 1;
-      scores = { p1: 88, p2: 90, p3: 92 }; // Default values aligned with reference
-      window.scores = scores;
-      window.currentPhase = currentPhase;
 
       loadPhase(1);
       switchTab('indicators');
-      if (typeof window.syncScoreToCloud === 'function') {
-        window.syncScoreToCloud();
-      }
+      showToast(`⚡ Chào mừng ${teamName}! Phase 1 sẵn sàng mô phỏng.`, 'info');
     }
 
     function resetGame() {
-      document.getElementById('slide-title').classList.remove('hidden');
+      currentPhase = 1;
+      scores = { p1: null, p2: null, p3: null };
+      isResultUnlocked = false;
+
       document.getElementById('slide-app').classList.add('hidden');
+      document.getElementById('tab-content-summary').classList.add('hidden');
+      document.getElementById('slide-title').classList.remove('hidden');
+
+      document.getElementById('header-team-badge').classList.add('hidden');
       document.getElementById('phase-stepper').classList.add('hidden');
       document.getElementById('nav-tabs').classList.add('hidden');
-      document.getElementById('tab-content-summary').classList.add('hidden');
-      document.getElementById('header-team-badge').classList.add('hidden');
-      document.getElementById('header-team-badge').classList.remove('flex');
-
-      currentPhase = 1;
-      scores = { p1: 88, p2: 90, p3: 92 };
-      window.scores = scores;
-      window.currentPhase = currentPhase;
-      toggleRoomCodeInput();
-    }
-
-    function setFixedVolume(vol) {
-      document.getElementById('volumeInput').value = vol;
     }
 
     function loadPhase(phaseNum) {
       currentPhase = phaseNum;
-      window.currentPhase = currentPhase;
       const cfg = phaseConfig[phaseNum];
 
       isResultUnlocked = false;
@@ -1033,15 +970,20 @@
         }
       }
 
-      document.getElementById('p-title-ind').innerText = cfg.title;
-      document.getElementById('p-title-dec').innerText = cfg.title;
-      document.getElementById('p-title-res').innerText = cfg.title;
+      const titleInd = document.getElementById('p-title-ind');
+      if (titleInd) titleInd.innerText = cfg.title;
+
+      const titleDec = document.getElementById('p-title-dec');
+      if (titleDec) titleDec.innerText = cfg.title;
+
+      const titleRes = document.getElementById('p-title-res');
+      if (titleRes) titleRes.innerText = cfg.title;
 
       const scenarioEl = document.getElementById('scenario-text');
       if (scenarioEl) scenarioEl.innerText = cfg.scenario;
       
       const decisionScenarioEl = document.getElementById('decision-scenario-text');
-      if (decisionScenarioEl) decisionScenarioEl.innerText = "chỗ này sẽ update scenario sau";
+      if (decisionScenarioEl) decisionScenarioEl.innerText = cfg.scenario;
 
       document.getElementById('ind-gdp').innerText = cfg.indicators.gdp;
       document.getElementById('ind-cpi').innerText = cfg.indicators.cpi;
@@ -1079,7 +1021,7 @@
 
     function switchTab(tabName) {
       if (tabName === 'results' && !isResultUnlocked) {
-        showToast(" Vui lòng nhấn 'SUBMIT OMO DECISION' ở Tab Decisions để thực thi chính sách!", "warning");
+        showToast("⚠️ Vui lòng nhấn 'SUBMIT OMO DECISION' ở Tab Decisions trước khi xem Kết quả!", "warning");
         return;
       }
 
@@ -1113,8 +1055,8 @@
       const cfg = phaseConfig[currentPhase];
 
       let phaseScore = 88;
-      let evalTitle = "Tối ưu hiệu quả truyền dẫn (Optimal Transmission)";
-      let analysisText = "Chỗ này sẽ có explanation cho player. ";
+      let evalTitle = "Will be updates so stay tuned";
+      let analysisText = "YOLO";
 
       const pre = cfg.preMetrics;
       let postRate = pre.rate;
@@ -1130,69 +1072,53 @@
       if (currentPhase === 1) {
         if (isInjectingLiquidity && vol >= 4000 && vol <= 7000) {
           phaseScore = 88;
-          evalTitle = "Bơm thanh khoản chính xác & Hạ nhiệt lãi suất LNH";
           postRate = Math.max(3.60, pre.rate - 0.15);
           postDep = pre.dep - 0.05;
           postCpi = pre.cpi - 0.02;
           postGdp = pre.gdp + 0.05;
-          analysisText += `Quyết định bơm ${vol.toLocaleString()} tỷ VND qua OMO với lãi suất ${userRate}% đã giải tỏa cơn khát thanh khoản cho các NHTM. Lãi suất liên ngân hàng giảm xuống ${postRate.toFixed(2)}%, giữ lạm phát ổn định.`;
         } else if (!isInjectingLiquidity) {
           phaseScore = 50;
-          evalTitle = "Đi ngược bối cảnh thị trường (Rủi ro sốc thanh khoản)";
           postRate = pre.rate + 0.40;
           postDep = pre.dep + 0.20;
-          analysisText += `Thị trường đang thiếu hụt thanh khoản nghiêm trọng nhưng NHTW lại rút bớt ${vol.toLocaleString()} tỷ VND làm lãi suất LNH vọt lên ${postRate.toFixed(2)}%.`;
         } else {
           phaseScore = 75;
-          evalTitle = "Truyền dẫn chính sách chưa tối ưu";
           postRate = Math.max(3.80, pre.rate - 0.05);
-          analysisText += `Khối lượng bơm (${vol.toLocaleString()} tỷ VND) chưa sát nhu cầu thị trường. Lãi suất LNH điều chỉnh nhẹ về ${postRate.toFixed(2)}%.`;
         }
       } else if (currentPhase === 2) {
         if (method === 'rate' && isInjectingLiquidity && vol >= 6000) {
           phaseScore = 90;
-          evalTitle = "Kích hoạt cơ chế tự khám phá giá thành công";
           postRate = Math.max(3.90, pre.rate - 0.20);
           postDep = pre.dep - 0.10;
           postCpi = pre.cpi - 0.05;
           postGdp = pre.gdp + 0.08;
-          analysisText += `Phương thức Đấu thầu Lãi suất đã kích hoạt cơ chế tự khám phá giá. Hơn ${vol.toLocaleString()} tỷ VND được phân bổ đúng cho các ngân hàng thực sự cần vốn, lãi suất LNH giảm về ${postRate.toFixed(2)}%.`;
         } else if (method === 'volume') {
           phaseScore = 70;
-          evalTitle = "Chưa tận dụng cơ chế khám phá giá thị trường";
           postRate = pre.rate - 0.10;
-          analysisText += `Thị trường đang biến động giá mạnh nhưng NHTW áp đặt Đấu thầu Khối lượng khiến phản ứng của các NHTM bị hạn chế.`;
         } else {
           phaseScore = 65;
-          evalTitle = "Chỉ số thanh khoản chưa đạt kỳ vọng";
           postRate = pre.rate - 0.05;
-          analysisText += `Khối lượng thầu ${vol.toLocaleString()} tỷ VND chưa đủ lấp khoảng trống thanh khoản hệ thống.`;
         }
       } else if (currentPhase === 3) {
         if (!isInjectingLiquidity && vol >= 4000 && vol <= 8000) {
           phaseScore = 92;
-          evalTitle = "Kiểm soát lạm phát & Ổn định vĩ mô thành công";
           postRate = pre.rate - 0.15;
           postCpi = Math.max(4.10, pre.cpi - 0.13);
           postGdp = pre.gdp + 0.02;
           postDep = pre.dep - 0.10;
-          analysisText += `Quyết định thắt chặt qua OMO (hút ròng ${vol.toLocaleString()} tỷ VND) đã kiềm chế CPI từ ${pre.cpi}% về ${postCpi.toFixed(2)}%, giảm áp lực lạm phát mà vẫn giữ đà tăng trưởng.`;
         } else if (isInjectingLiquidity) {
           phaseScore = 45;
-          evalTitle = "Tạo áp lực lạm phát thị trường";
           postCpi = pre.cpi + 0.25;
           postRate = pre.rate - 0.25;
-          analysisText += `Hệ thống đang thừa thanh khoản và lạm phát cao (${pre.cpi}%), nhưng NHTW lại tiếp tục bơm thêm ${vol.toLocaleString()} tỷ VND khiến CPI tăng lên ${postCpi.toFixed(2)}%.`;
         } else {
           phaseScore = 70;
-          evalTitle = "Điều chỉnh thanh khoản ở mức vừa phải";
           postCpi = pre.cpi - 0.05;
-          analysisText += `NHTW hút tiền quy mô nhỏ (${vol.toLocaleString()} tỷ VND). Áp lực lạm phát giảm nhẹ nhưng cần theo dõi thêm.`;
         }
       }
 
+      evalTitle = "Will be updates so stay tuned";
+      analysisText = "YOLO";
+
       scores[`p${currentPhase}`] = phaseScore;
-      window.scores = scores;
 
       isResultUnlocked = true;
       const resBtn = document.getElementById('tab-btn-results');
@@ -1307,10 +1233,6 @@
         nextBtn.innerHTML = `<span>VIEW FINAL SIMULATION REPORT</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
       }
 
-      if (typeof window.syncScoreToCloud === 'function') {
-        window.syncScoreToCloud();
-      }
-
       showToast(` Gửi quyết định ${cfg.title} thành công!`, "success");
       switchTab('results');
     }
@@ -1398,18 +1320,6 @@
       document.getElementById('card-score-p2').innerText = scores.p2 || 90;
       document.getElementById('card-score-p3').innerText = scores.p3 || 92;
 
-      const selectedMode = document.getElementById('selectMode').value;
-      const scoreboardCard = document.getElementById('multiplayer-scoreboard-card');
-      
-      if (selectedMode === 'team_comp') {
-        scoreboardCard.classList.remove('hidden');
-        if (typeof window.renderMultiplayerLeaderboard === 'function') {
-          window.renderMultiplayerLeaderboard();
-        }
-      } else {
-        scoreboardCard.classList.add('hidden');
-      }
-
       const reviewText = document.getElementById('final-review-text');
       reviewText.innerText = `XUẤT SẮC! ${teamName} đã điều tiết lượng cung tiền linh hoạt qua 3 Phase. Lãi suất liên ngân hàng được duy trì ổn định quanh mục tiêu, kiểm soát hiệu quả lạm phát và giữ vững tăng trưởng GDP.`;
     }
@@ -1466,11 +1376,15 @@
       });
     }
 
+    // ESC key event listener
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeGuideModal();
+    });
+
     // Bind interactive handlers to global window
     window.openGuideModal = openGuideModal;
     window.closeGuideModal = closeGuideModal;
     window.toggleTheme = toggleTheme;
-    window.toggleRoomCodeInput = toggleRoomCodeInput;
     window.toggleRateVisibility = toggleRateVisibility;
     window.startGame = startGame;
     window.resetGame = resetGame;
