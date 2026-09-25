@@ -173,8 +173,8 @@
             Công Cụ & Phương Thức Đấu Thầu (OMO Console)
           </h4>
           <ul class="list-disc pl-5 text-xs space-y-1.5">
-            <li><strong>Repo / Mua giấy tờ có giá:</strong> Bơm thanh khoản vào hệ thống thương mại.</li>
-            <li><strong>Reverse Repo / Phát hành Tín phiếu:</strong> Rút bớt tiền dư thừa khỏi hệ thống.</li>
+            <li><strong>Repo / Sell Securities:</strong> NHNN bán giấy tờ có giá để hút tiền thanh khoản (hoặc mua lại ở đáo hạn).</li>
+            <li><strong>Reverse Repo / Buy Securities:</strong> NHNN mua giấy tờ có giá để bơm thanh khoản (hoặc bán lại ở đáo hạn).</li>
             <li><strong>Volume Auction (Đấu thầu khối lượng):</strong> NHNN ấn định trước lãi suất, NHTM đăng ký khối lượng mua.</li>
             <li><strong>Interest Rate Auction (Đấu thầu lãi suất):</strong> NHNN ấn định khối lượng chào thầu, các NHTM tự đặt mức lãi suất cạnh tranh.</li>
           </ul>
@@ -343,7 +343,7 @@
             <div class="app-card rounded-xl p-3.5 sm:p-4 space-y-3">
               <div class="flex items-center justify-between border-b border-slate-200 dark:border-slate-700 pb-2">
                 <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">Schedule of Maturity</h3>
-                <span class="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400">Ngày phát hành: 8/13/2026</span>
+                <span id="mat-issue-date" class="text-[10px] font-mono font-semibold text-slate-500 dark:text-slate-400">Ngày phát hành: 02/02/2025</span>
               </div>
               
               <div class="overflow-x-auto">
@@ -456,10 +456,10 @@
               <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">3. OMO Action Type</label>
                 <select id="omoAction" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
-                  <option value="repo" selected>Repo (Bơm tiền)</option>
-                  <option value="reverse_repo">Reverse Repo (Hút tiền)</option>
-                  <option value="buy_securities">Buy Securities (Mua đứt giấy tờ có giá)</option>
-                  <option value="sell_securities">Sell Securities (Bán đứt giấy tờ có giá)</option>
+                  <option value="repo" selected>Repo (Hút tiền - NHNN bán giấy tờ có giá)</option>
+                  <option value="reverse_repo">Reverse Repo (Bơm tiền - NHNN mua giấy tờ có giá)</option>
+                  <option value="buy_securities">Buy Securities (Bơm tiền đứt - Mua giấy tờ có giá)</option>
+                  <option value="sell_securities">Sell Securities (Hút tiền đứt - Bán/Phát hành Tín phiếu)</option>
                 </select>
               </div>
 
@@ -708,6 +708,313 @@
   </main>
 
   <script>
+    /*
+     * Central Bank OMO Engine Implementation in JS
+     * Integrates central_bank_engine.py logic, state tracking, auction pricing, 
+     * maturity cash flow calculations, and interbank transmission models.
+     */
+
+    // Central Bank Engine Classes & State Data Structures
+    class CentralBankGameEngine {
+      constructor(startDate = "2025-02-02", initialRate = 3.95) {
+        this.startDate = new Date(startDate);
+        this.currentDate = new Date(startDate);
+        this.phase = 1;
+        this.interbankRate = initialRate;
+        this.unmetLiquidity = 0;
+        
+        // Active position inventories
+        this.tbillInventory = [
+          { id: "TB-90N-01", issueDate: "2024-11-04", maturityDate: "2025-02-02", rate: 3.43, remainingVol: 15000, faceValue: 15000 }
+        ];
+        this.repoPositions = [
+          { id: "RP-60N-01", type: "repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.15, remainingVol: 2000, price: 1985.0 },
+          { id: "RRP-60N-01", type: "reverse_repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.30, remainingVol: 2000, price: 2015.0 }
+        ];
+
+        this.phaseResults = {};
+      }
+
+      // Format Date Helper
+      formatDate(dateObj) {
+        const d = new Date(dateObj);
+        const day = String(d.getDate()).padStart(2, '0');
+        const month = String(d.getMonth() + 1).padStart(2, '0');
+        const year = d.getFullYear();
+        return `${day}/${month}/${year}`;
+      }
+
+      // Add Days Helper
+      addDays(dateObj, days) {
+        const result = new Date(dateObj);
+        result.setDate(result.getDate() + days);
+        return result;
+      }
+
+      // Price calculation formula for OMO / T-Bills: Price = Cash / (1 + r * days / 365)
+      calculatePrice(faceValue, rate, tenorDays = 30) {
+        return faceValue / (1 + (rate / 100) * (tenorDays / 365));
+      }
+
+      // Compute maturing cash flows for the current phase date
+      calculateMaturityEvents(currentPhaseDate) {
+        let events = [];
+        let totalMaturityVolume = 0;
+
+        // T-Bills maturing
+        this.tbillInventory.forEach(tb => {
+          if (new Date(tb.maturityDate) <= currentPhaseDate && tb.remainingVol > 0) {
+            // CB pays cash to redeem T-Bills -> Injects liquidity (+Cash)
+            events.push({
+              id: tb.id,
+              type: "TBILL",
+              issue_date: tb.issueDate,
+              maturity_date: tb.maturityDate,
+              rate: tb.rate,
+              volume: tb.remainingVol,
+              cash_flow: tb.remainingVol
+            });
+            totalMaturityVolume += tb.remainingVol;
+            tb.remainingVol = 0;
+          }
+        });
+
+        // Repos & Reverse Repos maturing
+        this.repoPositions.forEach(rp => {
+          if (new Date(rp.maturityDate) <= currentPhaseDate && rp.remainingVol > 0) {
+            let cashFlow = 0;
+            if (rp.type === "repo") {
+              // Past Repo (CB sold securities to banks earlier): At maturity CB buys back -> cash injection (+Cash)
+              cashFlow = rp.remainingVol;
+            } else if (rp.type === "reverse_repo") {
+              // Past Reverse Repo (CB bought securities earlier): At maturity CB sells back -> cash absorption (-Cash)
+              cashFlow = -rp.remainingVol;
+            }
+            events.push({
+              id: rp.id,
+              type: rp.type.toUpperCase(),
+              issue_date: rp.issueDate,
+              maturity_date: rp.maturityDate,
+              rate: rp.rate,
+              volume: rp.remainingVol,
+              cash_flow: cashFlow
+            });
+            totalMaturityVolume += cashFlow;
+            rp.remainingVol = 0;
+          }
+        });
+
+        return { events, totalMaturityVolume };
+      }
+
+      // Simulate orderbook bids submitted by commercial banks (Bank A..E)
+      simulateBankBids(action, auctionMethod, pricingMechanism, targetVolume, userRate, currentInterbank) {
+        const banks = ["Bank A", "Bank B", "Bank C", "Bank D", "Bank E"];
+        let bids = [];
+
+        // Determine base rate spread around market interbank rate
+        let baseRate = auctionMethod === "volume" ? userRate : currentInterbank;
+
+        // Generate demand volumes from banks totaling ~1.2x to 1.5x target volume
+        const totalMultiplier = 1.35;
+        const totalDemand = targetVolume * totalMultiplier;
+        const weights = [0.28, 0.24, 0.20, 0.15, 0.13];
+
+        banks.forEach((bank, idx) => {
+          let bidVol = Math.round((totalDemand * weights[idx]) / 500) * 500;
+          if (bidVol < 500) bidVol = 500;
+
+          let bidRate = baseRate;
+          if (auctionMethod === "rate") {
+            // Spread bids slightly above/below interbank rate
+            const spreadOffsets = [0.15, 0.10, 0.05, 0.00, -0.05];
+            bidRate = parseFloat((baseRate + spreadOffsets[idx]).toFixed(2));
+          } else {
+            bidRate = parseFloat(userRate.toFixed(2));
+          }
+
+          bids.push({
+            rank: idx + 1,
+            bank: bank,
+            bid_rate: bidRate,
+            settlement_rate: bidRate,
+            bid_volume: bidVol,
+            real_volume: 0,
+            price: 0,
+            status: "Chờ kết quả"
+          });
+        });
+
+        // Execute Auction Allocation Engine
+        let cutOffRate = baseRate;
+
+        if (auctionMethod === "rate") {
+          // Sort bids by competitive advantage
+          const isInjection = (action === 'reverse_repo' || action === 'buy_securities');
+          // In injection auctions, higher interest rate offered by bank is preferred by CB; in absorption, lower rate
+          if (isInjection) {
+            bids.sort((a, b) => b.bid_rate - a.bid_rate);
+          } else {
+            bids.sort((a, b) => a.bid_rate - b.bid_rate);
+          }
+
+          let remainingTarget = targetVolume;
+
+          bids.forEach((b, index) => {
+            b.rank = index + 1;
+            if (remainingTarget >= b.bid_volume) {
+              b.real_volume = b.bid_volume;
+              b.status = "Trúng thầu toàn bộ";
+              remainingTarget -= b.bid_volume;
+              cutOffRate = b.bid_rate;
+            } else if (remainingTarget > 0) {
+              b.real_volume = remainingTarget;
+              const ratio = Math.round((remainingTarget / b.bid_volume) * 100);
+              b.status = `Trúng thầu một phần (${ratio}%)`;
+              cutOffRate = b.bid_rate;
+              remainingTarget = 0;
+            } else {
+              b.real_volume = 0;
+              b.status = "Không trúng thầu";
+            }
+          });
+
+          // Determine Settlement Rate based on Pricing Mechanism
+          bids.forEach(b => {
+            if (b.real_volume > 0) {
+              b.settlement_rate = (pricingMechanism === 'single') ? cutOffRate : b.bid_rate;
+              b.price = this.calculatePrice(b.real_volume, b.settlement_rate, 30);
+            } else {
+              b.settlement_rate = b.bid_rate;
+              b.price = 0;
+            }
+          });
+
+        } else {
+          // Volume Auction: Pro-rata allocation
+          cutOffRate = userRate;
+          const totalBidVol = bids.reduce((sum, b) => sum + b.bid_volume, 0);
+          const allocationRatio = Math.min(1.0, targetVolume / totalBidVol);
+
+          bids.forEach(b => {
+            b.settlement_rate = userRate;
+            b.real_volume = Math.round((b.bid_volume * allocationRatio) / 100) * 100;
+            if (b.real_volume > 0) {
+              b.status = allocationRatio >= 1.0 ? "Trúng thầu toàn bộ" : `Trúng thầu pro-rata (${Math.round(allocationRatio * 100)}%)`;
+              b.price = this.calculatePrice(b.real_volume, userRate, 30);
+            } else {
+              b.status = "Không trúng thầu";
+              b.price = 0;
+            }
+          });
+        }
+
+        return { bids, cutOffRate };
+      }
+
+      // Execute full simulation step for a Phase
+      runPhase(phaseNum, scenarioDemand, decision) {
+        this.phase = phaseNum;
+        
+        // Calculate date offset (30 days per phase)
+        const phaseDate = this.addDays(this.startDate, (phaseNum - 1) * 30);
+        this.currentDate = phaseDate;
+
+        // 1. Calculate Maturity Schedule Cashflows
+        const { events, totalMaturityVolume } = this.calculateMaturityEvents(phaseDate);
+
+        // 2. Simulate Orderbook Bids
+        const { bids, cutOffRate } = this.simulateBankBids(
+          decision.omoAction,
+          decision.auctionMethod,
+          decision.pricingMechanism,
+          decision.volume,
+          decision.repoRate,
+          this.interbankRate
+        );
+
+        const totalRealizedVolume = bids.reduce((sum, b) => sum + b.real_volume, 0);
+
+        // 3. Central Bank Perspective Net Liquidity Calculation
+        // Repo / Sell Securities = Absorbs liquidity (-vol)
+        // Reverse Repo / Buy Securities = Injects liquidity (+vol)
+        const isInjection = (decision.omoAction === 'reverse_repo' || decision.omoAction === 'buy_securities');
+        const omoSupplyEffect = isInjection ? totalRealizedVolume : -totalRealizedVolume;
+
+        const realLiquidityDemand = scenarioDemand + this.unmetLiquidity;
+        const totalCashSupply = omoSupplyEffect + totalMaturityVolume;
+        const liquidityGap = realLiquidityDemand - totalCashSupply;
+
+        // Update unmet liquidity for next phase
+        this.unmetLiquidity = Math.max(0, -liquidityGap);
+
+        // 4. Interbank Rate Transmission Engine
+        let prevInterbank = this.interbankRate;
+        let postInterbank = prevInterbank;
+
+        // Rate adjusts dynamically based on remaining liquidity pressure gap
+        if (Math.abs(liquidityGap) <= 1000) {
+          // Well balanced liquidity
+          postInterbank = isInjection ? Math.max(3.0, prevInterbank - 0.15) : prevInterbank - 0.05;
+        } else if (liquidityGap < -1000) {
+          // Severe liquidity deficit remaining -> Interbank rate increases
+          postInterbank = prevInterbank + Math.min(0.60, (Math.abs(liquidityGap) / 5000) * 0.40);
+        } else {
+          // Excess liquidity surplus -> Interbank rate drops
+          postInterbank = Math.max(2.5, prevInterbank - (liquidityGap / 5000) * 0.35);
+        }
+
+        this.interbankRate = parseFloat(postInterbank.toFixed(2));
+
+        // 5. Store new position in active inventories for future phase maturity
+        const maturityDateStr = this.formatDate(this.addDays(phaseDate, 30));
+        const issueDateStr = this.formatDate(phaseDate);
+
+        if (totalRealizedVolume > 0) {
+          if (decision.omoAction === 'sell_securities') {
+            this.tbillInventory.push({
+              id: `TB-30N-0${phaseNum}`,
+              issueDate: issueDateStr,
+              maturityDate: maturityDateStr,
+              rate: cutOffRate,
+              remainingVol: totalRealizedVolume,
+              faceValue: totalRealizedVolume
+            });
+          } else {
+            this.repoPositions.push({
+              id: `POS-P${phaseNum}`,
+              type: decision.omoAction,
+              issueDate: issueDateStr,
+              maturityDate: maturityDateStr,
+              rate: cutOffRate,
+              remainingVol: totalRealizedVolume,
+              price: this.calculatePrice(totalRealizedVolume, cutOffRate, 30)
+            });
+          }
+        }
+
+        // Return comprehensive result package
+        return {
+          phase: phaseNum,
+          phaseDate: phaseDate,
+          scenarioDemand,
+          unmetLiquidity: this.unmetLiquidity,
+          realLiquidityDemand,
+          omoSupplyEffect,
+          totalMaturityVolume,
+          totalCashSupply,
+          liquidityGap,
+          prevInterbank,
+          postInterbank: this.interbankRate,
+          cutOffRate,
+          bids,
+          events
+        };
+      }
+    }
+
+    // UI Controller Logic
+    let gameEngine = new CentralBankGameEngine();
     let currentPhase = 1;
     let teamName = "Nhóm 1 – Central Bankers";
     let scores = { p1: null, p2: null, p3: null };
@@ -719,7 +1026,7 @@
     const phaseConfig = {
       1: {
         title: "Phase 1: Phase 1",
-        scenario: "Scenario pending",
+        scenario: "Hệ thống ngân hàng đang chịu áp lực thiếu hụt thanh khoản ngắn hạn khoảng 1,900 Tỷ VND. Hãy cân nhắc bơm thanh khoản hợp lý để hạ nhiệt lãi suất liên ngân hàng.",
         indicators: {
           gdp: "3.40%",
           cpi: "3.97%",
@@ -735,7 +1042,7 @@
           revRate: "3.30%"
         },
         method: "volume",
-        action: "repo",
+        action: "reverse_repo",
         defaultVol: 5000,
         defaultRate: 4.00,
         chartData: [3.95, 3.95, 3.95, 3.95],
@@ -745,18 +1052,11 @@
           dep: 4.95,
           cpi: 3.97,
           gdp: 3.40
-        },
-        bankBids: [
-          { bank: "Bank A", rate: 4.00, vol: 1500, awarded: 0, status: "" },
-          { bank: "Bank B", rate: 4.00, vol: 1200, awarded: 0, status: "" },
-          { bank: "Bank C", rate: 4.00, vol: 1000, awarded: 0, status: "" },
-          { bank: "Bank D", rate: 4.00, vol: 800, awarded: 0, status: "" },
-          { bank: "Bank E", rate: 4.00, vol: 1000, awarded: 0, status: "" }
-        ]
+        }
       },
       2: {
         title: "Phase 2: Phase 2",
-        scenario: "Yep it still pending, plz wait",
+        scenario: "Nhu cầu thanh khoản gia tăng đột biến lên -3,500 Tỷ VND. Lãi suất LNH nhích lên 4.10%. Hãy dùng Đấu thầu Lãi suất để xác định mức chi phí vốn tối ưu cho thị trường.",
         indicators: {
           gdp: "3.45%",
           cpi: "3.95%",
@@ -772,7 +1072,7 @@
           revRate: "3.20%"
         },
         method: "rate",
-        action: "repo",
+        action: "reverse_repo",
         defaultVol: 6000,
         defaultRate: 4.15,
         chartData: [3.80, 3.92, 4.02, 4.10],
@@ -782,18 +1082,11 @@
           dep: 5.10,
           cpi: 3.95,
           gdp: 3.45
-        },
-        bankBids: [
-          { bank: "Bank A", rate: 4.25, vol: 2000, awarded: 0, status: "" },
-          { bank: "Bank B", rate: 4.20, vol: 1800, awarded: 0, status: "" },
-          { bank: "Bank C", rate: 4.15, vol: 1500, awarded: 0, status: "" },
-          { bank: "Bank D", rate: 4.10, vol: 1200, awarded: 0, status: "" },
-          { bank: "Bank E", rate: 4.05, vol: 1000, awarded: 0, status: "" }
-        ]
+        }
       },
       3: {
         title: "Phase 3: Phase 3",
-        scenario: "STILL STILL pending, wait faster!",
+        scenario: "Dòng tiền trôi về hệ thống khiến thanh khoản dư thừa +6,000 Tỷ VND, làm lãi suất LNH giảm sâu xuống 3.20% và áp lực lạm phát CPI tăng. Hãy chủ động hút tiền.",
         indicators: {
           gdp: "3.52%",
           cpi: "4.23%",
@@ -809,7 +1102,7 @@
           revRate: "3.65%"
         },
         method: "volume",
-        action: "reverse_repo",
+        action: "repo",
         defaultVol: 5000,
         defaultRate: 3.50,
         chartData: [3.85, 3.60, 3.40, 3.20],
@@ -819,14 +1112,7 @@
           dep: 4.70,
           cpi: 4.23,
           gdp: 3.52
-        },
-        bankBids: [
-          { bank: "Bank A", rate: 3.50, vol: 1800, awarded: 0, status: "" },
-          { bank: "Bank B", rate: 3.50, vol: 1500, awarded: 0, status: "" },
-          { bank: "Bank C", rate: 3.50, vol: 1200, awarded: 0, status: "" },
-          { bank: "Bank D", rate: 3.50, vol: 1000, awarded: 0, status: "" },
-          { bank: "Bank E", rate: 3.50, vol: 1000, awarded: 0, status: "" }
-        ]
+        }
       }
     };
 
@@ -918,6 +1204,8 @@
         teamName = "Group 1";
       }
 
+      gameEngine = new CentralBankGameEngine();
+
       document.getElementById('current-team-name').innerText = teamName;
       document.getElementById('slide-title').classList.add('hidden');
       document.getElementById('slide-app').classList.remove('hidden');
@@ -928,13 +1216,14 @@
 
       loadPhase(1);
       switchTab('indicators');
-      showToast(`⚡ Chào mừng ${teamName}! Phase 1 sẵn sàng mô phỏng.`, 'info');
+      showToast(`⚡ Chào mừng ${teamName}! Engine OMO sẵn sàng mô phỏng.`, 'info');
     }
 
     function resetGame() {
       currentPhase = 1;
       scores = { p1: null, p2: null, p3: null };
       isResultUnlocked = false;
+      gameEngine = new CentralBankGameEngine();
 
       document.getElementById('slide-app').classList.add('hidden');
       document.getElementById('tab-content-summary').classList.add('hidden');
@@ -970,20 +1259,12 @@
         }
       }
 
-      const titleInd = document.getElementById('p-title-ind');
-      if (titleInd) titleInd.innerText = cfg.title;
+      document.getElementById('p-title-ind').innerText = cfg.title;
+      document.getElementById('p-title-dec').innerText = cfg.title;
+      document.getElementById('p-title-res').innerText = cfg.title;
 
-      const titleDec = document.getElementById('p-title-dec');
-      if (titleDec) titleDec.innerText = cfg.title;
-
-      const titleRes = document.getElementById('p-title-res');
-      if (titleRes) titleRes.innerText = cfg.title;
-
-      const scenarioEl = document.getElementById('scenario-text');
-      if (scenarioEl) scenarioEl.innerText = cfg.scenario;
-      
-      const decisionScenarioEl = document.getElementById('decision-scenario-text');
-      if (decisionScenarioEl) decisionScenarioEl.innerText = cfg.scenario;
+      document.getElementById('scenario-text').innerText = cfg.scenario;
+      document.getElementById('decision-scenario-text').innerText = cfg.scenario;
 
       document.getElementById('ind-gdp').innerText = cfg.indicators.gdp;
       document.getElementById('ind-cpi').innerText = cfg.indicators.cpi;
@@ -992,11 +1273,9 @@
       const liqEl = document.getElementById('ind-liquidity');
       if (liqEl) {
         liqEl.innerText = cfg.indicators.liquidity;
-        if (cfg.indicators.liquidity.startsWith('+')) {
-          liqEl.className = "font-mono font-bold text-emerald-600 dark:text-sky-400";
-        } else {
-          liqEl.className = "font-mono font-bold text-rose-600 dark:text-rose-400";
-        }
+        liqEl.className = cfg.indicators.liquidity.startsWith('+') ? 
+          "font-mono font-bold text-emerald-600 dark:text-sky-400" : 
+          "font-mono font-bold text-rose-600 dark:text-rose-400";
       }
 
       if (cfg.matTable) {
@@ -1052,73 +1331,79 @@
       const userRate = parseFloat(document.getElementById('inputRate').value) || 4.0;
       const action = document.getElementById('omoAction').value;
       const method = document.getElementById('auctionMethod').value;
+      const pricing = document.getElementById('pricingMechanism').value;
+
       const cfg = phaseConfig[currentPhase];
-
-      let phaseScore = 88;
-      let evalTitle = "Will be updates so stay tuned";
-      let analysisText = "YOLO";
-
       const pre = cfg.preMetrics;
-      let postRate = pre.rate;
-      let postLiq = pre.liq;
-      let postDep = pre.dep;
-      let postCpi = pre.cpi;
-      let postGdp = pre.gdp;
 
-      const isInjectingLiquidity = (action === 'repo' || action === 'buy_securities');
-      const deltaLiqVal = isInjectingLiquidity ? vol : -vol;
-      postLiq += deltaLiqVal;
+      // Map scenario liquidity numbers
+      let scenarioDemand = -1900;
+      if (currentPhase === 2) scenarioDemand = -3500;
+      if (currentPhase === 3) scenarioDemand = 6000;
+
+      // Run Decision through Central Bank Engine
+      const decisionObj = {
+        auctionMethod: method,
+        pricingMechanism: pricing,
+        omoAction: action,
+        volume: vol,
+        repoRate: userRate
+      };
+
+      const result = gameEngine.runPhase(currentPhase, scenarioDemand, decisionObj);
+
+      // Scoring & Policy Evaluation Model
+      let phaseScore = 85;
+      let evalTitle = "Đánh giá Điều hành OMO";
+      let analysisText = "";
+
+      const isInjection = (action === 'reverse_repo' || action === 'buy_securities');
 
       if (currentPhase === 1) {
-        if (isInjectingLiquidity && vol >= 4000 && vol <= 7000) {
-          phaseScore = 88;
-          postRate = Math.max(3.60, pre.rate - 0.15);
-          postDep = pre.dep - 0.05;
-          postCpi = pre.cpi - 0.02;
-          postGdp = pre.gdp + 0.05;
-        } else if (!isInjectingLiquidity) {
-          phaseScore = 50;
-          postRate = pre.rate + 0.40;
-          postDep = pre.dep + 0.20;
+        if (isInjection && vol >= 3000 && vol <= 6000) {
+          phaseScore = 92;
+          evalTitle = "Đạt mục tiêu: Giải tỏa thiếu hụt & Ổn định lãi suất LNH";
+          analysisText = `Bơm thanh khoản thành công ${vol.toLocaleString()} Tỷ VND qua ${action === 'reverse_repo' ? 'Reverse Repo' : 'Mua đứt'}. Lãi suất LNH được hạ nhiệt từ ${result.prevInterbank.toFixed(2)}% xuống ${result.postInterbank.toFixed(2)}%, đưa thanh khoản về mức an toàn.`;
+        } else if (!isInjection) {
+          phaseScore = 55;
+          evalTitle = "Sai hướng chính sách: Thị trường thiếu hụt nhưng lại hút tiền!";
+          analysisText = `Thị trường đang thiếu hụt thanh khoản (-1,900 Tỷ) nhưng NHNN lại tiến hành hút tiền làm chênh lệch thanh khoản tăng lên ${result.liquidityGap.toLocaleString()} Tỷ VND, đẩy lãi suất LNH tăng căng thẳng.`;
         } else {
           phaseScore = 75;
-          postRate = Math.max(3.80, pre.rate - 0.05);
+          evalTitle = "Khối lượng chưa tối ưu";
+          analysisText = `Quyết định bơm thanh khoản đúng hướng nhưng khối lượng chào thầu (${vol.toLocaleString()} Tỷ) lệch so với nhu cầu thực tế, chưa cân bằng tối ưu khoảng trống thanh khoản.`;
         }
       } else if (currentPhase === 2) {
-        if (method === 'rate' && isInjectingLiquidity && vol >= 6000) {
-          phaseScore = 90;
-          postRate = Math.max(3.90, pre.rate - 0.20);
-          postDep = pre.dep - 0.10;
-          postCpi = pre.cpi - 0.05;
-          postGdp = pre.gdp + 0.08;
-        } else if (method === 'volume') {
-          phaseScore = 70;
-          postRate = pre.rate - 0.10;
+        if (method === 'rate' && isInjection && vol >= 4000) {
+          phaseScore = 95;
+          evalTitle = "Xuất sắc: Đấu thầu Lãi suất truyền dẫn thị trường hiệu quả";
+          analysisText = `Áp dụng Đấu thầu Lãi suất với cơ chế ${pricing === 'single' ? 'Đơn giá' : 'Đa giá'} giúp khám phá mức lãi suất cut-off thị trường ${result.cutOffRate.toFixed(2)}%/năm. Bơm đủ thanh khoản đáp ứng thiếu hụt -3,500 Tỷ.`;
         } else {
-          phaseScore = 65;
-          postRate = pre.rate - 0.05;
+          phaseScore = 72;
+          evalTitle = "Phương thức đấu thầu chưa linh hoạt";
+          analysisText = `Trong điều kiện biến động cao, việc duy trì Đấu thầu Khối lượng không phản ánh chính xác chi phí vốn cạnh tranh của các NHTM. Lãi suất LNH giảm chậm về ${result.postInterbank.toFixed(2)}%.`;
         }
       } else if (currentPhase === 3) {
-        if (!isInjectingLiquidity && vol >= 4000 && vol <= 8000) {
-          phaseScore = 92;
-          postRate = pre.rate - 0.15;
-          postCpi = Math.max(4.10, pre.cpi - 0.13);
-          postGdp = pre.gdp + 0.02;
-          postDep = pre.dep - 0.10;
-        } else if (isInjectingLiquidity) {
-          phaseScore = 45;
-          postCpi = pre.cpi + 0.25;
-          postRate = pre.rate - 0.25;
+        if (!isInjection && vol >= 4000 && vol <= 8000) {
+          phaseScore = 94;
+          evalTitle = "Xuất sắc: Kịp thời hút tiền dư thừa, ngăn rủi ro lạm phát";
+          analysisText = `Thực hiện ${action === 'repo' ? 'Repo' : 'Bán Tín phiếu'} rút thành công ${vol.toLocaleString()} Tỷ dư thừa khỏi hệ thống. Lãi suất LNH hồi phục lên ${result.postInterbank.toFixed(2)}%, kiềm chế đà tăng lạm phát CPI.`;
         } else {
-          phaseScore = 70;
-          postCpi = pre.cpi - 0.05;
+          phaseScore = 50;
+          evalTitle = "Cảnh báo: Bơm tiền trong khi hệ thống đang thừa vốn!";
+          analysisText = `Thanh khoản hệ thống đang dư thừa +6,000 Tỷ VND nhưng NHNN lại bơm thêm tiền làm gia tăng rủi ro lạm phát dài hạn và gây dư thừa vốn trầm trọng.`;
         }
       }
 
-      evalTitle = "Will be updates so stay tuned";
-      analysisText = "YOLO";
-
       scores[`p${currentPhase}`] = phaseScore;
+
+      // Update Post Macro Metrics
+      const postRate = result.postInterbank;
+      const postLiq = result.totalCashSupply + scenarioDemand;
+      const deltaLiq = result.totalCashSupply;
+      const postDep = parseFloat((pre.dep + (postRate - pre.rate) * 0.3).toFixed(2));
+      const postCpi = parseFloat((pre.cpi + (isInjection ? 0.03 : -0.04)).toFixed(2));
+      const postGdp = parseFloat((pre.gdp + (isInjection ? 0.04 : 0.01)).toFixed(2));
 
       isResultUnlocked = true;
       const resBtn = document.getElementById('tab-btn-results');
@@ -1128,55 +1413,13 @@
         resBtn.title = "Xem kết quả OMO";
       }
 
-      let bankBids = JSON.parse(JSON.stringify(cfg.bankBids));
-      let cutoffRate = userRate;
-
-      if (method === 'rate') {
-        bankBids.sort((a, b) => b.rate - a.rate);
-        let remainingVol = vol;
-
-        bankBids.forEach(b => {
-          if (remainingVol >= b.vol) {
-            b.awarded = b.vol;
-            b.status = "Trúng thầu toàn bộ";
-            remainingVol -= b.vol;
-            cutoffRate = b.rate;
-          } else if (remainingVol > 0) {
-            b.awarded = remainingVol;
-            b.status = `Trúng thầu một phần (${Math.round((remainingVol/b.vol)*100)}%)`;
-            cutoffRate = b.rate;
-            remainingVol = 0;
-          } else {
-            b.awarded = 0;
-            b.status = "Không trúng thầu";
-          }
-        });
-      } else {
-        cutoffRate = userRate;
-        const totalReq = bankBids.reduce((sum, b) => sum + b.vol, 0);
-        const ratio = Math.min(1, vol / totalReq);
-
-        bankBids.forEach(b => {
-          if (userRate < pre.rate && isInjectingLiquidity) {
-            b.awarded = 0;
-            b.status = "Lãi suất thầu quá thấp";
-          } else {
-            b.awarded = Math.round(b.vol * ratio);
-            b.status = ratio >= 1 ? "Trúng thầu toàn bộ" : `Trúng thầu pro-rata (${Math.round(ratio*100)}%)`;
-          }
-        });
-      }
-
-      const deltaRateVal = postRate - pre.rate;
-      const deltaDepVal = postDep - pre.dep;
-      const deltaCpiVal = postCpi - pre.cpi;
-      const deltaGdpVal = postGdp - pre.gdp;
-
+      // Populate UI Tab 3 Results
       document.getElementById('res-eval-title').innerText = evalTitle;
       document.getElementById('res-analysis').innerText = analysisText;
 
       document.getElementById('row-pre-rate').innerText = `${pre.rate.toFixed(2)}%`;
       document.getElementById('row-post-rate').innerText = `${postRate.toFixed(2)}%`;
+      const deltaRateVal = postRate - pre.rate;
       document.getElementById('row-delta-rate').innerText = `${deltaRateVal >= 0 ? '+' : ''}${deltaRateVal.toFixed(2)}%`;
 
       document.getElementById('row-pre-liq').innerText = `${pre.liq >= 0 ? '+' : ''}${pre.liq.toLocaleString()} Tỷ`;
@@ -1189,35 +1432,36 @@
 
       const rowDeltaLiq = document.getElementById('row-delta-liq');
       if (rowDeltaLiq) {
-        rowDeltaLiq.innerText = `${deltaLiqVal >= 0 ? '+' : ''}${deltaLiqVal.toLocaleString()} Tỷ`;
-        rowDeltaLiq.className = deltaLiqVal >= 0 ? "font-mono text-emerald-600 dark:text-sky-400" : "font-mono text-rose-600 dark:text-rose-400";
+        rowDeltaLiq.innerText = `${deltaLiq >= 0 ? '+' : ''}${deltaLiq.toLocaleString()} Tỷ`;
+        rowDeltaLiq.className = deltaLiq >= 0 ? "font-mono text-emerald-600 dark:text-sky-400" : "font-mono text-rose-600 dark:text-rose-400";
       }
 
       document.getElementById('row-pre-dep').innerText = `${pre.dep.toFixed(2)}%`;
       document.getElementById('row-post-dep').innerText = `${postDep.toFixed(2)}%`;
-      document.getElementById('row-delta-dep').innerText = `${deltaDepVal >= 0 ? '+' : ''}${deltaDepVal.toFixed(2)}%`;
+      document.getElementById('row-delta-dep').innerText = `${(postDep - pre.dep) >= 0 ? '+' : ''}${(postDep - pre.dep).toFixed(2)}%`;
 
       document.getElementById('row-pre-cpi').innerText = `${pre.cpi.toFixed(2)}%`;
       document.getElementById('row-post-cpi').innerText = `${postCpi.toFixed(2)}%`;
-      document.getElementById('row-delta-cpi').innerText = `${deltaCpiVal >= 0 ? '+' : ''}${deltaCpiVal.toFixed(2)}%`;
+      document.getElementById('row-delta-cpi').innerText = `${(postCpi - pre.cpi) >= 0 ? '+' : ''}${(postCpi - pre.cpi).toFixed(2)}%`;
 
       document.getElementById('row-pre-gdp').innerText = `${pre.gdp.toFixed(2)}%`;
       document.getElementById('row-post-gdp').innerText = `${postGdp.toFixed(2)}%`;
-      document.getElementById('row-delta-gdp').innerText = `${deltaGdpVal >= 0 ? '+' : ''}${deltaGdpVal.toFixed(2)}%`;
+      document.getElementById('row-delta-gdp').innerText = `${(postGdp - pre.gdp) >= 0 ? '+' : ''}${(postGdp - pre.gdp).toFixed(2)}%`;
 
-      document.getElementById('bids-cutoff-badge').innerText = `Cut-off Rate: ${method === 'rate' ? cutoffRate.toFixed(2) : userRate.toFixed(2)}%/năm`;
+      document.getElementById('bids-cutoff-badge').innerText = `Cut-off Rate: ${result.cutOffRate.toFixed(2)}%/năm`;
 
+      // Render Simulated Orderbook Table
       const bidsTableBody = document.getElementById('bids-table-body');
       let bidsHtml = "";
-      bankBids.forEach(b => {
-        const isWin = b.awarded > 0;
+      result.bids.forEach(b => {
+        const isWin = b.real_volume > 0;
         const statusColor = isWin ? "text-emerald-600 dark:text-sky-400 font-bold" : "text-slate-400";
         bidsHtml += `
           <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
             <td class="font-bold text-slate-800 dark:text-slate-200 font-sans">${b.bank}</td>
-            <td>${b.rate.toFixed(2)}%</td>
-            <td>${b.vol.toLocaleString()} Tỷ</td>
-            <td class="font-bold text-slate-900 dark:text-slate-100">${b.awarded.toLocaleString()} Tỷ</td>
+            <td>${b.bid_rate.toFixed(2)}%</td>
+            <td>${b.bid_volume.toLocaleString()} Tỷ</td>
+            <td class="font-bold text-slate-900 dark:text-slate-100">${b.real_volume.toLocaleString()} Tỷ</td>
             <td class="${statusColor} font-sans font-semibold">${b.status}</td>
           </tr>
         `;
@@ -1233,7 +1477,7 @@
         nextBtn.innerHTML = `<span>VIEW FINAL SIMULATION REPORT</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
       }
 
-      showToast(` Gửi quyết định ${cfg.title} thành công!`, "success");
+      showToast(`⚡ Đã thi hành quyết định OMO ${cfg.title}! Engine đã tính toán xong.`, "success");
       switchTab('results');
     }
 
@@ -1320,8 +1564,16 @@
       document.getElementById('card-score-p2').innerText = scores.p2 || 90;
       document.getElementById('card-score-p3').innerText = scores.p3 || 92;
 
+      const avgScore = Math.round(((scores.p1 || 88) + (scores.p2 || 90) + (scores.p3 || 92)) / 3);
+
       const reviewText = document.getElementById('final-review-text');
-      reviewText.innerText = `XUẤT SẮC! ${teamName} đã điều tiết lượng cung tiền linh hoạt qua 3 Phase. Lãi suất liên ngân hàng được duy trì ổn định quanh mục tiêu, kiểm soát hiệu quả lạm phát và giữ vững tăng trưởng GDP.`;
+      if (avgScore >= 90) {
+        reviewText.innerText = `XUẤT SẮC (${avgScore}/100)! Ban Điều hành ${teamName} đã điều tiết cung tiền linh hoạt qua 3 Phase. Lãi suất liên ngân hàng được duy trì ổn định quanh mục tiêu, kiểm soát hiệu quả lạm phát và giữ vững đà tăng trưởng vĩ mô.`;
+      } else if (avgScore >= 75) {
+        reviewText.innerText = `KHÁ (Đạt ${avgScore}/100). Ban Điều hành ${teamName} đã cơ bản đáp ứng thanh khoản hệ thống. Cần chú ý tinh chỉnh khối lượng chào thầu sát hơn để tối ưu hóa hiệu quả truyền dẫn điều hành.`;
+      } else {
+        reviewText.innerText = `CẦN CẢI THIỆN (${avgScore}/100). Quyết định bơm/rút tiền ở các Phase chưa bám sát nhu cầu thanh khoản thực tế, khiến lãi suất liên ngân hàng biến động mạnh.`;
+      }
     }
 
     function renderChart(chartData) {
