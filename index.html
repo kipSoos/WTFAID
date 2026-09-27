@@ -1196,27 +1196,42 @@
       }, 3500);
     }
 
-    function startGame() {
+    async function startGame() {
       const inputEl = document.getElementById('inputTeamName');
       if (inputEl && inputEl.value.trim()) {
         teamName = inputEl.value.trim();
       } else {
         teamName = "Group 1";
       }
-
-      gameEngine = new CentralBankGameEngine();
-
-      document.getElementById('current-team-name').innerText = teamName;
-      document.getElementById('slide-title').classList.add('hidden');
-      document.getElementById('slide-app').classList.remove('hidden');
-      
-      document.getElementById('header-team-badge').classList.remove('hidden');
-      document.getElementById('phase-stepper').classList.remove('hidden');
-      document.getElementById('nav-tabs').classList.remove('hidden');
-
-      loadPhase(1);
-      switchTab('indicators');
-      showToast(`⚡ Chào mừng ${teamName}! Engine OMO sẵn sàng mô phỏng.`, 'info');
+    
+      try {
+        // Gọi API khởi tạo game từ Flask Server Python
+        const response = await fetch('http://127.0.0.1:5000/api/start-game', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ start_date: "02/02/2025", initial_rate: 3.95 })
+        });
+        const data = await response.json();
+        
+        if (data.status === 'success') {
+          document.getElementById('current-team-name').innerText = teamName;
+          document.getElementById('slide-title').classList.add('hidden');
+          document.getElementById('slide-app').classList.remove('hidden');
+          
+          document.getElementById('header-team-badge').classList.remove('hidden');
+          document.getElementById('phase-stepper').classList.remove('hidden');
+          document.getElementById('nav-tabs').classList.remove('hidden');
+    
+          loadPhase(1);
+          switchTab('indicators');
+          showToast(`⚡ Chào mừng ${teamName}!`, 'info');
+        } else {
+          showToast('Lỗi khởi tạo game' + data.message, 'warning');
+        }
+      } catch (err) {
+        showToast('Không thể kết nối tới Server', 'warning');
+        console.error(err);
+      }
     }
 
     function resetGame() {
@@ -1326,185 +1341,101 @@
       }
     }
 
-   function submitDecision() {
-    const vol = parseInt(document.getElementById('volumeInput').value) || 5000;
-  
-    const method = document.getElementById('auctionMethod').value;
-  
-    const userRate =
-      method === 'Volume auction'
-        ? parseFloat(document.getElementById('inputRate').value)
-        : null;
-  
-    const action = document.getElementById('omoAction').value;
-  
-    const pricing =
-      method === 'Interest-rate auction'
-        ? document.getElementById('pricingMechanism').value
-        : null;
-    const cfg = phaseConfig[currentPhase];
-    const scenarioDemand = cfg.preMetrics.liq;
-    const pre = cfg.preMetrics;
-
-  // ===== BƯỚC MỚI: TẠO DECISION CONTRACT =====
-    const decisionContract = {
-      auction_method: method,
-      pricing_method: pricing,
-      omo_action: action,
-      volume: vol,
-      repo_rate: userRate
-    };
-  // ===== TẠM THỜI: ADAPTER SANG FORMAT CŨ =====
-    const legacyDecision = {
-      auctionMethod:
-        method === 'Interest-rate auction'
-          ? 'rate'
-          : 'volume',
+    async function submitDecision() {
+      const method = document.getElementById('auctionMethod').value;
+      const pricing = document.getElementById('pricingMechanism').value;
+      const action = document.getElementById('omoAction').value;
+      const volume = parseFloat(document.getElementById('volumeInput').value) || 0;
+      const inputRate = parseFloat(document.getElementById('inputRate').value) || 4.0;
     
-      pricingMechanism:
-        pricing === 'Single-price'
-          ? 'single'
-          : pricing === 'Multi-price'
-            ? 'multi'
-            : null,
+      if (volume <= 0) {
+        showToast('Vui lòng nhập khối lượng hợp lệ (> 0)!', 'warning');
+        return;
+      }
     
-      omoAction: action,
+      const cfg = phaseConfig[currentPhase];
+      const scenarioDemand = cfg.preMetrics.liq;
+      const pre = cfg.preMetrics;
     
-      volume: vol,
-      repoRate: userRate
-    };
-
-      const result = gameEngine.runPhase(currentPhase, scenarioDemand, legacyDecision);
-
-      // Scoring & Policy Evaluation Model
-      let phaseScore = 85;
-      let evalTitle = "Đánh giá Điều hành OMO";
-      let analysisText = "";
-
-      const isInjection = (action === 'Reverse Repo' || action === 'Buy Securities');
-
-      if (currentPhase === 1) {
-        if (isInjection && vol >= 3000 && vol <= 6000) {
-          phaseScore = 92;
-          evalTitle = "Đạt mục tiêu: Giải tỏa thiếu hụt & Ổn định lãi suất LNH";
-          analysisText = `Bơm thanh khoản thành công ${vol.toLocaleString()} Tỷ VND qua ${action === 'Reverse Repo' ? 'Reverse Repo' : 'Mua đứt'}. Lãi suất LNH được hạ nhiệt từ ${result.prevInterbank.toFixed(2)}% xuống ${result.postInterbank.toFixed(2)}%, đưa thanh khoản về mức an toàn.`;
-        } else if (!isInjection) {
-          phaseScore = 55;
-          evalTitle = "Sai hướng chính sách: Thị trường thiếu hụt nhưng lại hút tiền!";
-          analysisText = `Thị trường đang thiếu hụt thanh khoản (-1,900 Tỷ) nhưng NHNN lại tiến hành hút tiền làm chênh lệch thanh khoản tăng lên ${result.liquidityGap.toLocaleString()} Tỷ VND, đẩy lãi suất LNH tăng căng thẳng.`;
+      const payload = {
+        scenario_demand: scenarioDemand,
+        auction_method: method,
+        pricing_method: method === 'Interest-rate auction' ? pricing : null,
+        omo_action: action,
+        volume: volume,
+        repo_rate: method === 'Volume auction' ? inputRate : null
+      };
+    
+      try {
+        const response = await fetch('http://127.0.0.1:5000/api/run-phase', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        
+        const result = await response.json();
+        if (response.ok) {
+          const rateDiff = Math.abs(result.interbank_rate - pre.rate);
+          let phaseScore = Math.max(60, Math.round(100 - rateDiff * 25));
+          scores[`p${currentPhase}`] = phaseScore;
+    
+          isResultUnlocked = true;
+          const resBtn = document.getElementById('tab-btn-results');
+          if (resBtn) {
+            resBtn.disabled = false;
+            resBtn.innerHTML = "Results";
+            resBtn.title = "Xem kết quả OMO";
+          }
+    
+          document.getElementById('res-eval-title').innerText = `Phase ${currentPhase} Executed via Python Backend`;
+          document.getElementById('res-analysis').innerText = 
+            `Nghiệp vụ ${action} (${volume.toLocaleString()} Tỷ) đã thực thi. Lãi suất LNH chuyển dịch từ ${result.previous_interbank_rate.toFixed(2)}% về ${result.interbank_rate.toFixed(2)}%.`;
+    
+          document.getElementById('row-pre-rate').innerText = `${pre.rate.toFixed(2)}%`;
+          document.getElementById('row-post-rate').innerText = `${result.interbank_rate.toFixed(2)}%`;
+          const deltaRateVal = result.interbank_rate - pre.rate;
+          document.getElementById('row-delta-rate').innerText = `${deltaRateVal >= 0 ? '+' : ''}${deltaRateVal.toFixed(2)}%`;
+    
+          document.getElementById('row-pre-liq').innerText = `${pre.liq >= 0 ? '+' : ''}${pre.liq.toLocaleString()} Tỷ`;
+          document.getElementById('row-post-liq').innerText = `${result.total_supply >= 0 ? '+' : ''}${result.total_supply.toLocaleString()} Tỷ`;
+    
+          document.getElementById('bids-cutoff-badge').innerText = `Cut-off / Win Rate: ${result.win_rate.toFixed(2)}%/năm`;
+    
+          const bidsTableBody = document.getElementById('bids-table-body');
+          let bidsHtml = "";
+          result.bids.forEach(b => {
+            const statusColor = b.won ? "text-emerald-600 dark:text-sky-400 font-bold" : "text-slate-400";
+            bidsHtml += `
+              <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                <td class="font-bold text-slate-800 dark:text-slate-200 font-sans">${b.bank}</td>
+                <td>${b.bid_rate.toFixed(2)}%</td>
+                <td>${b.bid_volume.toLocaleString()} Tỷ</td>
+                <td class="font-bold text-slate-900 dark:text-slate-100">${b.real_volume.toLocaleString()} Tỷ</td>
+                <td class="${statusColor} font-sans font-semibold">${b.status}</td>
+              </tr>
+            `;
+          });
+          bidsTableBody.innerHTML = bidsHtml;
+    
+          renderMacroResultsChart(pre.rate, result.interbank_rate, pre.dep, pre.dep, pre.cpi, pre.cpi);
+    
+          const nextBtn = document.getElementById('btn-next-phase');
+          if (currentPhase < 3) {
+            nextBtn.innerHTML = `<span>PROCEED TO PHASE ${currentPhase + 1}</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>`;
+          } else {
+            nextBtn.innerHTML = `<span>VIEW FINAL SIMULATION REPORT</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
+          }
+    
+          showToast(`⚡ Đã chạy xong mô phỏng Python cho ${cfg.title}!`, "success");
+          switchTab('results');
         } else {
-          phaseScore = 75;
-          evalTitle = "Khối lượng chưa tối ưu";
-          analysisText = `Quyết định bơm thanh khoản đúng hướng nhưng khối lượng chào thầu (${vol.toLocaleString()} Tỷ) lệch so với nhu cầu thực tế, chưa cân bằng tối ưu khoảng trống thanh khoản.`;
+          showToast('Lỗi từ Python Backend: ' + result.message, 'warning');
         }
-      } else if (currentPhase === 2) {
-        if (method === 'Interest-rate auction' && isInjection && vol >= 4000) {
-          phaseScore = 95;
-          evalTitle = "Xuất sắc: Đấu thầu Lãi suất truyền dẫn thị trường hiệu quả";
-          analysisText = `Áp dụng Đấu thầu Lãi suất với cơ chế ${pricing === 'Single-price' ? 'Đơn giá' : 'Đa giá'} giúp khám phá mức lãi suất cut-off thị trường ${result.cutOffRate.toFixed(2)}%/năm. Bơm đủ thanh khoản đáp ứng thiếu hụt -3,500 Tỷ.`;
-        } else {
-          phaseScore = 72;
-          evalTitle = "Phương thức đấu thầu chưa linh hoạt";
-          analysisText = `Trong điều kiện biến động cao, việc duy trì Đấu thầu Khối lượng không phản ánh chính xác chi phí vốn cạnh tranh của các NHTM. Lãi suất LNH giảm chậm về ${result.postInterbank.toFixed(2)}%.`;
-        }
-      } else if (currentPhase === 3) {
-        if (!isInjection && vol >= 4000 && vol <= 8000) {
-          phaseScore = 94;
-          evalTitle = "Xuất sắc: Kịp thời hút tiền dư thừa, ngăn rủi ro lạm phát";
-          analysisText = `Thực hiện ${action === 'repo' ? 'Repo' : 'Bán Tín phiếu'} rút thành công ${vol.toLocaleString()} Tỷ dư thừa khỏi hệ thống. Lãi suất LNH hồi phục lên ${result.postInterbank.toFixed(2)}%, kiềm chế đà tăng lạm phát CPI.`;
-        } else {
-          phaseScore = 50;
-          evalTitle = "Cảnh báo: Bơm tiền trong khi hệ thống đang thừa vốn!";
-          analysisText = `Thanh khoản hệ thống đang dư thừa +6,000 Tỷ VND nhưng NHNN lại bơm thêm tiền làm gia tăng rủi ro lạm phát dài hạn và gây dư thừa vốn trầm trọng.`;
-        }
+      } catch (err) {
+        showToast('Lỗi kết nối API tới server Python!', 'warning');
+        console.error(err);
       }
-
-      scores[`p${currentPhase}`] = phaseScore;
-
-      // Update Post Macro Metrics
-      const postRate = result.postInterbank;
-      const postLiq = result.totalCashSupply + scenarioDemand;
-      const deltaLiq = result.totalCashSupply;
-      const postDep = parseFloat((pre.dep + (postRate - pre.rate) * 0.3).toFixed(2));
-      const postCpi = parseFloat((pre.cpi + (isInjection ? 0.03 : -0.04)).toFixed(2));
-      const postGdp = parseFloat((pre.gdp + (isInjection ? 0.04 : 0.01)).toFixed(2));
-
-      isResultUnlocked = true;
-      const resBtn = document.getElementById('tab-btn-results');
-      if (resBtn) {
-        resBtn.disabled = false;
-        resBtn.innerHTML = "Results";
-        resBtn.title = "Xem kết quả OMO";
-      }
-
-      // Populate UI Tab 3 Results
-      document.getElementById('res-eval-title').innerText = evalTitle;
-      document.getElementById('res-analysis').innerText = analysisText;
-
-      document.getElementById('row-pre-rate').innerText = `${pre.rate.toFixed(2)}%`;
-      document.getElementById('row-post-rate').innerText = `${postRate.toFixed(2)}%`;
-      const deltaRateVal = postRate - pre.rate;
-      document.getElementById('row-delta-rate').innerText = `${deltaRateVal >= 0 ? '+' : ''}${deltaRateVal.toFixed(2)}%`;
-
-      document.getElementById('row-pre-liq').innerText = `${pre.liq >= 0 ? '+' : ''}${pre.liq.toLocaleString()} Tỷ`;
-      document.getElementById('row-post-liq').innerText = `${postLiq >= 0 ? '+' : ''}${postLiq.toLocaleString()} Tỷ`;
-      
-      const rowPostLiq = document.getElementById('row-post-liq');
-      if (rowPostLiq) {
-        rowPostLiq.className = postLiq >= 0 ? "font-mono font-bold text-emerald-600 dark:text-sky-400" : "font-mono font-bold text-rose-600 dark:text-rose-400";
-      }
-
-      const rowDeltaLiq = document.getElementById('row-delta-liq');
-      if (rowDeltaLiq) {
-        rowDeltaLiq.innerText = `${deltaLiq >= 0 ? '+' : ''}${deltaLiq.toLocaleString()} Tỷ`;
-        rowDeltaLiq.className = deltaLiq >= 0 ? "font-mono text-emerald-600 dark:text-sky-400" : "font-mono text-rose-600 dark:text-rose-400";
-      }
-
-      document.getElementById('row-pre-dep').innerText = `${pre.dep.toFixed(2)}%`;
-      document.getElementById('row-post-dep').innerText = `${postDep.toFixed(2)}%`;
-      document.getElementById('row-delta-dep').innerText = `${(postDep - pre.dep) >= 0 ? '+' : ''}${(postDep - pre.dep).toFixed(2)}%`;
-
-      document.getElementById('row-pre-cpi').innerText = `${pre.cpi.toFixed(2)}%`;
-      document.getElementById('row-post-cpi').innerText = `${postCpi.toFixed(2)}%`;
-      document.getElementById('row-delta-cpi').innerText = `${(postCpi - pre.cpi) >= 0 ? '+' : ''}${(postCpi - pre.cpi).toFixed(2)}%`;
-
-      document.getElementById('row-pre-gdp').innerText = `${pre.gdp.toFixed(2)}%`;
-      document.getElementById('row-post-gdp').innerText = `${postGdp.toFixed(2)}%`;
-      document.getElementById('row-delta-gdp').innerText = `${(postGdp - pre.gdp) >= 0 ? '+' : ''}${(postGdp - pre.gdp).toFixed(2)}%`;
-
-      document.getElementById('bids-cutoff-badge').innerText = `Cut-off Rate: ${result.cutOffRate.toFixed(2)}%/năm`;
-
-      // Render Simulated Orderbook Table
-      const bidsTableBody = document.getElementById('bids-table-body');
-      let bidsHtml = "";
-      result.bids.forEach(b => {
-        const isWin = b.real_volume > 0;
-        const statusColor = isWin ? "text-emerald-600 dark:text-sky-400 font-bold" : "text-slate-400";
-        bidsHtml += `
-          <tr class="hover:bg-slate-50 dark:hover:bg-slate-800/50">
-            <td class="font-bold text-slate-800 dark:text-slate-200 font-sans">${b.bank}</td>
-            <td>${b.bid_rate.toFixed(2)}%</td>
-            <td>${b.bid_volume.toLocaleString()} Tỷ</td>
-            <td class="font-bold text-slate-900 dark:text-slate-100">${b.real_volume.toLocaleString()} Tỷ</td>
-            <td class="${statusColor} font-sans font-semibold">${b.status}</td>
-          </tr>
-        `;
-      });
-      bidsTableBody.innerHTML = bidsHtml;
-
-      renderMacroResultsChart(pre.rate, postRate, pre.dep, postDep, pre.cpi, postCpi);
-
-      const nextBtn = document.getElementById('btn-next-phase');
-      if (currentPhase < 3) {
-        nextBtn.innerHTML = `<span>PROCEED TO PHASE ${currentPhase + 1}</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>`;
-      } else {
-        nextBtn.innerHTML = `<span>VIEW FINAL SIMULATION REPORT</span> <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`;
-      }
-
-      showToast(`⚡ Đã thi hành quyết định OMO ${cfg.title}! Engine đã tính toán xong.`, "success");
-      switchTab('results');
     }
-
     function renderMacroResultsChart(preRate, postRate, preDep, postDep, preCpi, postCpi) {
       const ctx = document.getElementById('macroResultsChart');
       if (!ctx) return;
