@@ -449,7 +449,7 @@
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">2. Pricing Method</label>
                 <select id="pricingMechanism" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
                   <option value="Single-price">Single-price (Đơn giá)</option>
-                  <option value="Multi=price">Multiple-price (Đa giá)</option>
+                  <option value="Multi-price">Multiple-price (Đa giá)</option>
                 </select>
               </div>
 
@@ -1326,39 +1326,56 @@
       }
     }
 
-    function submitDecision() {
-      const vol = parseInt(document.getElementById('volumeInput').value) || 5000;
-      const method = document.getElementById('auctionMethod').value;
-      const userRate =
-        method === 'Volume auction'
+   function submitDecision() {
+    const vol = parseInt(document.getElementById('volumeInput').value) || 5000;
+  
+    const method = document.getElementById('auctionMethod').value;
+  
+    const userRate =
+      method === 'Volume auction'
         ? parseFloat(document.getElementById('inputRate').value)
         : null;
-      const action = document.getElementById('omoAction').value;
-      const pricing =
-        method === 'Interest-rate auction'
+  
+    const action = document.getElementById('omoAction').value;
+  
+    const pricing =
+      method === 'Interest-rate auction'
         ? document.getElementById('pricingMechanism').value
         : null;
 
-      const cfg = phaseConfig[currentPhase];
-      const pre = cfg.preMetrics;
 
-      // Map scenario liquidity numbers
-      let scenarioDemand = -1900;
-      if (currentPhase === 2) scenarioDemand = -3500;
-      if (currentPhase === 3) scenarioDemand = 6000;
+  // ===== BƯỚC MỚI: TẠO DECISION CONTRACT =====
+    const decisionContract = {
+      auction_method: method,
+      pricing_method: pricing,
+      omo_action: action,
+      volume: vol,
+      repo_rate: userRate
+    };
 
-      // Run Decision through Central Bank Engine
-      const decisionObj = {
-        auction_method: method,
-        pricing_method: method === 'Interest-rate auction' ? pricing : null,
-        omo_action: action,
-        volume: vol,
-        repo_rate: method === 'Volume auction' ? userRate : null
-      };
+
+  // ===== TẠM THỜI: ADAPTER SANG FORMAT CŨ =====
+    const legacyDecision = {
+      auctionMethod:
+        method === 'Interest-rate auction'
+          ? 'rate'
+          : 'volume',
     
-      console.log("DEBUG DECISION CONTRACT:", decisionObj);
+      pricingMechanism:
+        pricing === 'Single-price'
+          ? 'single'
+          : pricing === 'Multi-price'
+            ? 'multi'
+            : null,
+    
+      // Giữ OMO Action theo vocabulary chuẩn hóa
+      omoAction: action,
+    
+      volume: vol,
+      repoRate: userRate
+    };
 
-      const result = gameEngine.runPhase(currentPhase, scenarioDemand, decisionObj);
+      const result = gameEngine.runPhase(currentPhase, scenarioDemand, legacyDecision);
 
       // Scoring & Policy Evaluation Model
       let phaseScore = 85;
