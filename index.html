@@ -729,7 +729,7 @@
         ];
         this.repoPositions = [
           { id: "RP-60N-01", type: "repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.15, remainingVol: 2000, price: 1985.0 },
-          { id: "RRP-60N-01", type: "reverse_repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.30, remainingVol: 2000, price: 2015.0 }
+          { id: "RRP-60N-01", type: "Reverse Repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.30, remainingVol: 2000, price: 2015.0 }
         ];
 
         this.phaseResults = {};
@@ -786,7 +786,7 @@
             if (rp.type === "repo") {
               // Past Repo (CB sold securities to banks earlier): At maturity CB buys back -> cash injection (+Cash)
               cashFlow = rp.remainingVol;
-            } else if (rp.type === "reverse_repo") {
+            } else if (rp.type === "Reverse Repo") {
               // Past Reverse Repo (CB bought securities earlier): At maturity CB sells back -> cash absorption (-Cash)
               cashFlow = -rp.remainingVol;
             }
@@ -850,7 +850,7 @@
 
         if (auctionMethod === "rate") {
           // Sort bids by competitive advantage
-          const isInjection = (action === 'reverse_repo' || action === 'buy_securities');
+          const isInjection = (action === 'Reverse Repo' || action === 'Buy Securities');
           // In injection auctions, higher interest rate offered by bank is preferred by CB; in absorption, lower rate
           if (isInjection) {
             bids.sort((a, b) => b.bid_rate - a.bid_rate);
@@ -938,7 +938,7 @@
         // 3. Central Bank Perspective Net Liquidity Calculation
         // Repo / Sell Securities = Absorbs liquidity (-vol)
         // Reverse Repo / Buy Securities = Injects liquidity (+vol)
-        const isInjection = (decision.omoAction === 'reverse_repo' || decision.omoAction === 'buy_securities');
+        const isInjection = (decision.omoAction === 'Reverse Repo' || decision.omoAction === 'Buy Securities');
         const omoSupplyEffect = isInjection ? totalRealizedVolume : -totalRealizedVolume;
 
         const realLiquidityDemand = scenarioDemand + this.unmetLiquidity;
@@ -971,7 +971,7 @@
         const issueDateStr = this.formatDate(phaseDate);
 
         if (totalRealizedVolume > 0) {
-          if (decision.omoAction === 'sell_securities') {
+          if (decision.omoAction === 'Sell Securities') {
             this.tbillInventory.push({
               id: `TB-30N-0${phaseNum}`,
               issueDate: issueDateStr,
@@ -1365,13 +1365,13 @@
       let evalTitle = "Đánh giá Điều hành OMO";
       let analysisText = "";
 
-      const isInjection = (action === 'reverse_repo' || action === 'buy_securities');
+      const isInjection = (action === 'Reverse Repo' || action === 'Buy Securities');
 
       if (currentPhase === 1) {
         if (isInjection && vol >= 3000 && vol <= 6000) {
           phaseScore = 92;
           evalTitle = "Đạt mục tiêu: Giải tỏa thiếu hụt & Ổn định lãi suất LNH";
-          analysisText = `Bơm thanh khoản thành công ${vol.toLocaleString()} Tỷ VND qua ${action === 'reverse_repo' ? 'Reverse Repo' : 'Mua đứt'}. Lãi suất LNH được hạ nhiệt từ ${result.prevInterbank.toFixed(2)}% xuống ${result.postInterbank.toFixed(2)}%, đưa thanh khoản về mức an toàn.`;
+          analysisText = `Bơm thanh khoản thành công ${vol.toLocaleString()} Tỷ VND qua ${action === 'Reverse Repo' ? 'Reverse Repo' : 'Mua đứt'}. Lãi suất LNH được hạ nhiệt từ ${result.prevInterbank.toFixed(2)}% xuống ${result.postInterbank.toFixed(2)}%, đưa thanh khoản về mức an toàn.`;
         } else if (!isInjection) {
           phaseScore = 55;
           evalTitle = "Sai hướng chính sách: Thị trường thiếu hụt nhưng lại hút tiền!";
