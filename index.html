@@ -1398,10 +1398,10 @@
           analysisText = `Quyết định bơm thanh khoản đúng hướng nhưng khối lượng chào thầu (${vol.toLocaleString()} Tỷ) lệch so với nhu cầu thực tế, chưa cân bằng tối ưu khoảng trống thanh khoản.`;
         }
       } else if (currentPhase === 2) {
-        if (method === 'rate' && isInjection && vol >= 4000) {
+        if (method === 'Interest-rate auction' && isInjection && vol >= 4000) {
           phaseScore = 95;
           evalTitle = "Xuất sắc: Đấu thầu Lãi suất truyền dẫn thị trường hiệu quả";
-          analysisText = `Áp dụng Đấu thầu Lãi suất với cơ chế ${pricing === 'single' ? 'Đơn giá' : 'Đa giá'} giúp khám phá mức lãi suất cut-off thị trường ${result.cutOffRate.toFixed(2)}%/năm. Bơm đủ thanh khoản đáp ứng thiếu hụt -3,500 Tỷ.`;
+          analysisText = `Áp dụng Đấu thầu Lãi suất với cơ chế ${pricing === 'Single-price' ? 'Đơn giá' : 'Đa giá'} giúp khám phá mức lãi suất cut-off thị trường ${result.cutOffRate.toFixed(2)}%/năm. Bơm đủ thanh khoản đáp ứng thiếu hụt -3,500 Tỷ.`;
         } else {
           phaseScore = 72;
           evalTitle = "Phương thức đấu thầu chưa linh hoạt";
