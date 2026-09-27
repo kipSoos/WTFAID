@@ -176,7 +176,7 @@
             <li><strong>Repo / Sell Securities:</strong> NHNN bán giấy tờ có giá để hút tiền thanh khoản (hoặc mua lại ở đáo hạn).</li>
             <li><strong>Reverse Repo / Buy Securities:</strong> NHNN mua giấy tờ có giá để bơm thanh khoản (hoặc bán lại ở đáo hạn).</li>
             <li><strong>Volume Auction (Đấu thầu khối lượng):</strong> NHNN ấn định trước lãi suất, NHTM đăng ký khối lượng mua.</li>
-            <li><strong>Interest Rate Auction (Đấu thầu lãi suất):</strong> NHNN ấn định khối lượng chào thầu, các NHTM tự đặt mức lãi suất cạnh tranh.</li>
+            <li><strong>Interest-rate Auction (Đấu thầu lãi suất):</strong> NHNN ấn định khối lượng chào thầu, các NHTM tự đặt mức lãi suất cạnh tranh.</li>
           </ul>
         </div>
 
@@ -440,26 +440,26 @@
               <div>
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">1. OMO Auction Method</label>
                 <select id="auctionMethod" onchange="toggleRateVisibility()" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
-                  <option value="volume">Volume Auction (Đấu thầu khối lượng)</option>
-                  <option value="rate">Interest Rate Auction (Đấu thầu lãi suất)</option>
+                  <option value="Volume auction">Volume Auction (Đấu thầu khối lượng)</option>
+                  <option value="Interest-rate auction">Interest-rate Auction (Đấu thầu lãi suất)</option>
                 </select>
               </div>
 
               <div id="pricingContainer" class="hidden">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">2. Pricing Method</label>
                 <select id="pricingMechanism" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
-                  <option value="single">Single-price (Đơn giá)</option>
-                  <option value="multi">Multiple-price (Đa giá)</option>
+                  <option value="Single-price">Single-price (Đơn giá)</option>
+                  <option value="Multi=price">Multiple-price (Đa giá)</option>
                 </select>
               </div>
 
               <div class="md:col-span-2">
                 <label class="block text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1.5">3. OMO Action Type</label>
                 <select id="omoAction" class="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 sm:p-3 text-xs sm:text-sm font-semibold text-slate-800 focus:outline-none focus:border-emerald-500 shadow-sm">
-                  <option value="repo" selected>Repo (Hút tiền - NHNN bán giấy tờ có giá)</option>
-                  <option value="reverse_repo">Reverse Repo (Bơm tiền - NHNN mua giấy tờ có giá)</option>
-                  <option value="buy_securities">Buy Securities (Bơm tiền đứt - Mua giấy tờ có giá)</option>
-                  <option value="sell_securities">Sell Securities (Hút tiền đứt - Bán/Phát hành Tín phiếu)</option>
+                  <option value="Repo" selected>Repo (Hút tiền - NHNN bán giấy tờ có giá)</option>
+                  <option value="Reverse Repo">Reverse Repo (Bơm tiền - NHNN mua giấy tờ có giá)</option>
+                  <option value="Buy Securities">Buy Securities (Bơm tiền đứt - Mua giấy tờ có giá)</option>
+                  <option value="Sell Securities">Sell Securities (Hút tiền đứt - Bán/Phát hành Tín phiếu)</option>
                 </select>
               </div>
 
@@ -501,7 +501,7 @@
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-500 font-bold">•</span>
-                  <span><strong>Interest Rate Auction:</strong> NHNN ấn định khối lượng chào thầu, lãi suất do các NHTM cạnh tranh tự do.</span>
+                  <span><strong>Interest-rate Auction:</strong> NHNN ấn định khối lượng chào thầu, lãi suất do các NHTM cạnh tranh tự do.</span>
                 </li>
                 <li class="flex items-start gap-2">
                   <span class="text-emerald-500 font-bold">•</span>
@@ -1041,8 +1041,8 @@
           revVol: "2,000",
           revRate: "3.30%"
         },
-        method: "volume",
-        action: "reverse_repo",
+        method: "Volume auction",
+        action: "Reverse Repo",
         defaultVol: 5000,
         defaultRate: 4.00,
         chartData: [3.95, 3.95, 3.95, 3.95],
@@ -1071,8 +1071,8 @@
           revVol: "1,000",
           revRate: "3.20%"
         },
-        method: "rate",
-        action: "reverse_repo",
+        method: "Interest-rate auction",
+        action: "Reverse Repo",
         defaultVol: 6000,
         defaultRate: 4.15,
         chartData: [3.80, 3.92, 4.02, 4.10],
@@ -1101,8 +1101,8 @@
           revVol: "8,000",
           revRate: "3.65%"
         },
-        method: "volume",
-        action: "repo",
+        method: "Volume auction",
+        action: "Repo",
         defaultVol: 5000,
         defaultRate: 3.50,
         chartData: [3.85, 3.60, 3.40, 3.20],
@@ -1155,7 +1155,7 @@
       const rateContainer = document.getElementById('rateContainer');
       const pricingContainer = document.getElementById('pricingContainer');
       
-      if (method === 'rate') {
+      if (method === 'Interest-rate auction') {
         if (rateContainer) rateContainer.classList.add('hidden');
         if (pricingContainer) pricingContainer.classList.remove('hidden');
       } else {
@@ -1328,10 +1328,16 @@
 
     function submitDecision() {
       const vol = parseInt(document.getElementById('volumeInput').value) || 5000;
-      const userRate = parseFloat(document.getElementById('inputRate').value) || 4.0;
+      const userRate =
+        method === 'Volume auction'
+        ? parseFloat(document.getElementById('inputRate').value)
+        : null;
       const action = document.getElementById('omoAction').value;
       const method = document.getElementById('auctionMethod').value;
-      const pricing = document.getElementById('pricingMechanism').value;
+      const pricing =
+        method === 'Interest-rate auction'
+        ? document.getElementById('pricingMechanism').value
+        : null;
 
       const cfg = phaseConfig[currentPhase];
       const pre = cfg.preMetrics;
@@ -1343,12 +1349,12 @@
 
       // Run Decision through Central Bank Engine
       const decisionObj = {
-        auctionMethod: method,
-        pricingMechanism: pricing,
-        omoAction: action,
+        auction_method: method,
+        pricing_method: pricing,
+        omo_action: action,
         volume: vol,
-        repoRate: userRate
-      };
+        repo_rate: userRate
+    };
 
       const result = gameEngine.runPhase(currentPhase, scenarioDemand, decisionObj);
 
@@ -1645,6 +1651,29 @@
     window.submitDecision = submitDecision;
     window.nextPhase = nextPhase;
     window.showSummary = showSummary;
+
+     // TEMPORARY DEBUG - Decision Contract
+     // ================================
+    function debugDecisionContract() {
+      const method = document.getElementById('auctionMethod').value;
+      const pricing = document.getElementById('pricingMechanism').value;
+      const action = document.getElementById('omoAction').value;
+      const volume = parseInt(document.getElementById('volumeInput').value) || 0;
+      const inputRate = parseFloat(document.getElementById('inputRate').value);
+
+      const decisionObj = {
+        auction_method: method,
+        pricing_method: method === 'Interest-rate auction' ? pricing : null,
+        omo_action: action,
+        volume: volume,
+        repo_rate: method === 'Volume auction' ? inputRate : null
+      };
+
+      console.log("DEBUG DECISION CONTRACT:");
+      console.log(decisionObj);
+
+      return decisionObj;
+    }
   </script>
 </body>
 </html>
