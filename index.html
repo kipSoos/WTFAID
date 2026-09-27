@@ -156,7 +156,7 @@
               Mức dư (+) hoặc thiếu hụt (-) tiền mặt hệ thống.
             </div>
             <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
-              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">Maturity Schedule (Lịch đáo hạn):</strong>
+              <strong class="text-emerald-600 dark:text-sky-400 block mb-0.5">Schedule of Maturity (Lịch đáo hạn):</strong>
               Khối lượng Tín phiếu & Repo tự động đến hạn bơm/rút tiền.
             </div>
             <div class="p-2.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700">
@@ -187,7 +187,7 @@
             Lời Khuyên Đạt Điểm Cao (Tips)
           </h4>
           <p class="text-xs">
-            Luôn quan sát <strong>Scenario Briefing</strong> ở mỗi Phase để đưa ra đúng nghiệp vụ (Bơm hay Rút) và tính toán khối lượng thầu vừa đủ giải quyết thiếu hụt thanh khoản mà không gây rủi ro lạm phát vượt trần!
+            Luôn quan sát <strong>Scenario</strong> ở mỗi Phase để đưa ra đúng nghiệp vụ (Bơm hay Rút) và tính toán khối lượng thầu vừa đủ giải quyết thiếu hụt thanh khoản mà không gây rủi ro lạm phát vượt trần!
           </p>
         </div>
 
@@ -323,7 +323,7 @@
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div class="flex items-center gap-2.5">
             <div>
-              <h2 id="p-title-ind" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
+              <h2 id="p-title-ind" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1</h2>
               <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Đánh giá bối cảnh vĩ mô, tình trạng thanh khoản và lịch đáo hạn OMO</p>
             </div>
           </div>
@@ -334,7 +334,7 @@
           <div class="lg:col-span-5 space-y-4">
             
             <div class="app-card rounded-xl p-3.5 sm:p-4 border-l-4 border-emerald-500 dark:border-sky-500">
-              <h4 class="text-[11px] sm:text-xs font-bold uppercase text-emerald-600 dark:text-sky-400 mb-1.5">Scenario Briefing</h4>
+              <h4 class="text-[11px] sm:text-xs font-bold uppercase text-emerald-600 dark:text-sky-400 mb-1.5">Scenario</h4>
               <p id="scenario-text" class="text-xs text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
                 Scenario pending
               </p>
@@ -351,25 +351,14 @@
                   <thead>
                     <tr class="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 text-[11px] font-bold">
                       <th class="py-1.5 px-2 text-left">Công cụ</th>
-                      <th class="py-1.5 px-2 text-center">Khối lượng (Tỷ VND)</th>
+                      <th class="py-1.5 px-2 text-center">Khối lượng (Tỷ)</th>
                       <th class="py-1.5 px-2 text-right">Lãi suất (%)</th>
+                      <th class="py-1.5 px-2 text-right">Ngày đáo hạn</th>
                     </tr>
                   </thead>
                   <tbody id="maturity-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 font-mono text-[11px]">
                     <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Tín phiếu 90N</td>
-                      <td id="mat-tb-bill-vol" class="text-center font-bold text-emerald-600 dark:text-sky-400">15,000</td>
-                      <td id="mat-tb-bill-rate" class="text-right text-slate-700 dark:text-slate-300">3.43%</td>
-                    </tr>
-                    <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Repo 60N</td>
-                      <td id="mat-tb-repo-vol" class="text-center font-bold text-rose-600 dark:text-rose-400">2,000</td>
-                      <td id="mat-tb-repo-rate" class="text-right text-slate-700 dark:text-slate-300">3.15%</td>
-                    </tr>
-                    <tr>
-                      <td class="font-sans font-semibold py-2 px-2 text-slate-800 dark:text-slate-200">Khối lượng Reverse Repo 60N</td>
-                      <td id="mat-tb-rev-vol" class="text-center font-bold text-amber-600 dark:text-amber-400">2,000</td>
-                      <td id="mat-tb-rev-rate" class="text-right text-slate-700 dark:text-slate-300">3.30%</td>
+                      <td colspan="3" class="text-center py-2 text-slate-400">Đang tải...</td>
                     </tr>
                   </tbody>
                 </table>
@@ -379,20 +368,12 @@
             <div class="app-card rounded-xl p-3.5 sm:p-4 space-y-2 text-xs">
               <h3 class="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 pb-2">Key Macro & Market Metrics</h3>
               <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-                <span class="text-slate-600 dark:text-slate-400">Real GDP Growth</span>
-                <span id="ind-gdp" class="font-mono font-bold text-slate-800 dark:text-slate-200">3.40%</span>
-              </div>
-              <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-                <span class="text-slate-600 dark:text-slate-400">Inflation (CPI)</span>
-                <span id="ind-cpi" class="font-mono font-bold text-amber-600 dark:text-amber-400">3.97%</span>
-              </div>
-              <div class="flex justify-between py-1 border-b border-slate-100 dark:border-slate-800">
-                <span class="text-slate-600 dark:text-slate-400">Interbank Rate (ON)</span>
+                <span class="text-slate-600 dark:text-slate-400">Interbank Rate</span>
                 <span id="ind-interbank" class="font-mono font-bold text-emerald-600 dark:text-sky-400">3.95%</span>
               </div>
               <div class="flex justify-between py-1">
                 <span class="text-slate-600 dark:text-slate-400">Liquidity Demand</span>
-                <span id="ind-liquidity" class="font-mono font-bold text-rose-600 dark:text-rose-400">-1,900 Tỷ</span>
+                <span id="ind-liquidity" class="font-mono font-bold text-rose-600 dark:text-rose-400">1,900 Tỷ</span>
               </div>
             </div>
 
@@ -421,7 +402,7 @@
       <section id="tab-content-decisions" class="hidden space-y-5">
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h2 id="p-title-dec" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
+            <h2 id="p-title-dec" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1</h2>
             <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Thiết lập thông số đấu thầu OMO để điều tiết lượng cung tiền</p>
           </div>
         </div>
@@ -517,7 +498,7 @@
       <section id="tab-content-results" class="hidden space-y-6">
         <div class="flex justify-between items-center border-b border-slate-200 dark:border-slate-800 pb-3">
           <div>
-            <h2 id="p-title-res" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1: Phase 1</h2>
+            <h2 id="p-title-res" class="text-lg sm:text-xl md:text-2xl font-bold text-slate-900 dark:text-white">Phase 1</h2>
             <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Kết quả truyền dẫn chính sách vĩ mô và bảng tổng hợp phản ứng thị trường</p>
           </div>
           <span class="px-3 py-1 rounded-full bg-emerald-100 dark:bg-sky-950 text-emerald-800 dark:text-sky-300 text-[11px] sm:text-xs font-bold border border-emerald-300 dark:border-sky-700">EXECUTION COMPLETE</span>
@@ -539,11 +520,11 @@
           </p>
         </div>
 
-        <!-- SIMULATED ORDERBOOK -->
+        <!-- Auction Result -->
         <div class="app-card rounded-2xl p-4 sm:p-5 space-y-3">
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800 pb-2">
             <div>
-              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Simulated Orderbook - Kết Quả Đấu Thầu Các NHTM</h3>
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 dark:text-slate-200">Auction Result - Kết Quả Đấu Thầu Các NHTM</h3>
               <p class="text-[11px] text-slate-500 dark:text-slate-400">Mô phỏng phản ứng đặt thầu của các Ngân hàng thương mại (Bank A - E)</p>
             </div>
             <span id="bids-cutoff-badge" class="text-[11px] font-mono font-bold text-emerald-600 dark:text-sky-400">Cut-off Rate: --</span>
@@ -564,7 +545,80 @@
             </table>
           </div>
         </div>
+      <!-- Result Inventories & Maturity Section -->
+      <div class="space-y-6 mt-4 pt-4 border-t border-slate-200 dark:border-slate-700">
 
+        <!-- 1. SBV BILL INVENTORY -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">SBV BILL INVENTORY</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-500 text-[11px]">
+                  <th class="py-1 text-left font-semibold">ID</th>
+                  <th class="py-1 text-left font-semibold">Issue Date</th>
+                  <th class="py-1 text-left font-semibold">Maturity</th>
+                  <th class="py-1 text-right font-semibold">Rate</th>
+                  <th class="py-1 text-right font-semibold">Remaining Volume</th>
+                </tr>
+              </thead>
+              <tbody id="res-sbv-bill-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-[11px]">
+                <tr><td colspan="5" class="text-center py-2 text-slate-400">Trống</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. REPO / REVERSE REPO INVENTORY -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">REPO / REVERSE REPO INVENTORY</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-500 text-[11px]">
+                  <th class="py-1 text-left font-semibold">ID</th>
+                  <th class="py-1 text-left font-semibold">Issue Date</th>
+                  <th class="py-1 text-left font-semibold">Maturity</th>
+                  <th class="py-1 text-right font-semibold">Rate</th>
+                  <th class="py-1 text-right font-semibold">Volume</th>
+                  <th class="py-1 text-right font-semibold">Price</th>
+                </tr>
+              </thead>
+              <tbody id="res-repo-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-[11px]">
+                <tr><td colspan="6" class="text-center py-2 text-slate-400">Trống</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 3. MATURITY -->
+        <div class="space-y-2">
+          <h4 class="text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300">MATURITY</h4>
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs font-mono border-collapse">
+              <thead>
+                <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-500 text-[11px]">
+                  <th class="py-1 text-left font-semibold">ID</th>
+                  <th class="py-1 text-left font-semibold">Issue Date</th>
+                  <th class="py-1 text-left font-semibold">Maturity</th>
+                  <th class="py-1 text-right font-semibold">Rate</th>
+                  <th class="py-1 text-right font-semibold">Cash Flow</th>
+                </tr>
+              </thead>
+              <tbody id="res-maturity-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-[11px]">
+                <tr><td colspan="5" class="text-center py-2 text-slate-400">Trống</td></tr>
+              </tbody>
+            </table>
+            
+            <!-- Total Cash Flow Footer -->
+            <div class="flex justify-between items-center pt-2 mt-2 border-t border-slate-200 dark:border-slate-700 font-mono text-xs font-bold">
+              <span class="text-slate-700 dark:text-slate-300 uppercase">TOTAL CASH FLOW</span>
+              <span id="res-total-cash-flow" class="text-rose-600 dark:text-rose-400">0.00</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
         <!-- MACRO IMPACT ANALYSIS -->
         <div class="app-card rounded-2xl p-4 sm:p-5 space-y-4">
           <div class="border-b border-slate-200 dark:border-slate-800 pb-2">
@@ -606,27 +660,6 @@
                   <td id="row-post-liq" class="font-mono font-bold text-emerald-600 dark:text-sky-400">+3,100 Tỷ</td>
                   <td id="row-delta-liq" class="font-mono text-emerald-600 dark:text-sky-400">+5,000 Tỷ</td>
                   <td><span class="px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 text-[10px] font-bold">Cân bằng cung cầu</span></td>
-                </tr>
-                <tr>
-                  <td class="font-bold text-slate-800 dark:text-slate-200">Avg Deposit Rate (Lãi suất CĐ)</td>
-                  <td id="row-pre-dep" class="font-mono">4.95%</td>
-                  <td id="row-post-dep" class="font-mono">4.90%</td>
-                  <td id="row-delta-dep" class="font-mono text-emerald-600 dark:text-sky-400">-0.05%</td>
-                  <td><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-[10px] font-bold">Độ trễ trung hạn</span></td>
-                </tr>
-                <tr>
-                  <td class="font-bold text-slate-800 dark:text-slate-200">Inflation Rate (CPI Lạm phát)</td>
-                  <td id="row-pre-cpi" class="font-mono">3.97%</td>
-                  <td id="row-post-cpi" class="font-mono">3.95%</td>
-                  <td id="row-delta-cpi" class="font-mono text-emerald-600 dark:text-sky-400">-0.02%</td>
-                  <td><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-[10px] font-bold">Độ trễ dài hạn (2-3 phase)</span></td>
-                </tr>
-                <tr>
-                  <td class="font-bold text-slate-800 dark:text-slate-200">GDP Growth Rate (Tăng trưởng)</td>
-                  <td id="row-pre-gdp" class="font-mono">3.40%</td>
-                  <td id="row-post-gdp" class="font-mono">3.45%</td>
-                  <td id="row-delta-gdp" class="font-mono text-emerald-600 dark:text-sky-400">+0.05%</td>
-                  <td><span class="px-2 py-0.5 rounded bg-slate-200 dark:bg-slate-700 text-[10px] font-bold">Độ trễ dài hạn (2-3 phase)</span></td>
                 </tr>
               </tbody>
             </table>
@@ -713,308 +746,8 @@
      * Integrates central_bank_engine.py logic, state tracking, auction pricing, 
      * maturity cash flow calculations, and interbank transmission models.
      */
-
     // Central Bank Engine Classes & State Data Structures
-    class CentralBankGameEngine {
-      constructor(startDate = "2025-02-02", initialRate = 3.95) {
-        this.startDate = new Date(startDate);
-        this.currentDate = new Date(startDate);
-        this.phase = 1;
-        this.interbankRate = initialRate;
-        this.unmetLiquidity = 0;
-        
-        // Active position inventories
-        this.tbillInventory = [
-          { id: "TB-90N-01", issueDate: "2024-11-04", maturityDate: "2025-02-02", rate: 3.43, remainingVol: 15000, faceValue: 15000 }
-        ];
-        this.repoPositions = [
-          { id: "RP-60N-01", type: "repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.15, remainingVol: 2000, price: 1985.0 },
-          { id: "RRP-60N-01", type: "Reverse Repo", issueDate: "2024-12-04", maturityDate: "2025-02-02", rate: 3.30, remainingVol: 2000, price: 2015.0 }
-        ];
-
-        this.phaseResults = {};
-      }
-
-      // Format Date Helper
-      formatDate(dateObj) {
-        const d = new Date(dateObj);
-        const day = String(d.getDate()).padStart(2, '0');
-        const month = String(d.getMonth() + 1).padStart(2, '0');
-        const year = d.getFullYear();
-        return `${day}/${month}/${year}`;
-      }
-
-      // Add Days Helper
-      addDays(dateObj, days) {
-        const result = new Date(dateObj);
-        result.setDate(result.getDate() + days);
-        return result;
-      }
-
-      // Price calculation formula for OMO / T-Bills: Price = Cash / (1 + r * days / 365)
-      calculatePrice(faceValue, rate, tenorDays = 30) {
-        return faceValue / (1 + (rate / 100) * (tenorDays / 365));
-      }
-
-      // Compute maturing cash flows for the current phase date
-      calculateMaturityEvents(currentPhaseDate) {
-        let events = [];
-        let totalMaturityVolume = 0;
-
-        // T-Bills maturing
-        this.tbillInventory.forEach(tb => {
-          if (new Date(tb.maturityDate) <= currentPhaseDate && tb.remainingVol > 0) {
-            // CB pays cash to redeem T-Bills -> Injects liquidity (+Cash)
-            events.push({
-              id: tb.id,
-              type: "TBILL",
-              issue_date: tb.issueDate,
-              maturity_date: tb.maturityDate,
-              rate: tb.rate,
-              volume: tb.remainingVol,
-              cash_flow: tb.remainingVol
-            });
-            totalMaturityVolume += tb.remainingVol;
-            tb.remainingVol = 0;
-          }
-        });
-
-        // Repos & Reverse Repos maturing
-        this.repoPositions.forEach(rp => {
-          if (new Date(rp.maturityDate) <= currentPhaseDate && rp.remainingVol > 0) {
-            let cashFlow = 0;
-            if (rp.type === "repo") {
-              // Past Repo (CB sold securities to banks earlier): At maturity CB buys back -> cash injection (+Cash)
-              cashFlow = rp.remainingVol;
-            } else if (rp.type === "Reverse Repo") {
-              // Past Reverse Repo (CB bought securities earlier): At maturity CB sells back -> cash absorption (-Cash)
-              cashFlow = -rp.remainingVol;
-            }
-            events.push({
-              id: rp.id,
-              type: rp.type.toUpperCase(),
-              issue_date: rp.issueDate,
-              maturity_date: rp.maturityDate,
-              rate: rp.rate,
-              volume: rp.remainingVol,
-              cash_flow: cashFlow
-            });
-            totalMaturityVolume += cashFlow;
-            rp.remainingVol = 0;
-          }
-        });
-
-        return { events, totalMaturityVolume };
-      }
-
-      // Simulate orderbook bids submitted by commercial banks (Bank A..E)
-      simulateBankBids(action, auctionMethod, pricingMechanism, targetVolume, userRate, currentInterbank) {
-        const banks = ["Bank A", "Bank B", "Bank C", "Bank D", "Bank E"];
-        let bids = [];
-
-        // Determine base rate spread around market interbank rate
-        let baseRate = auctionMethod === "volume" ? userRate : currentInterbank;
-
-        // Generate demand volumes from banks totaling ~1.2x to 1.5x target volume
-        const totalMultiplier = 1.35;
-        const totalDemand = targetVolume * totalMultiplier;
-        const weights = [0.28, 0.24, 0.20, 0.15, 0.13];
-
-        banks.forEach((bank, idx) => {
-          let bidVol = Math.round((totalDemand * weights[idx]) / 500) * 500;
-          if (bidVol < 500) bidVol = 500;
-
-          let bidRate = baseRate;
-          if (auctionMethod === "rate") {
-            // Spread bids slightly above/below interbank rate
-            const spreadOffsets = [0.15, 0.10, 0.05, 0.00, -0.05];
-            bidRate = parseFloat((baseRate + spreadOffsets[idx]).toFixed(2));
-          } else {
-            bidRate = parseFloat(userRate.toFixed(2));
-          }
-
-          bids.push({
-            rank: idx + 1,
-            bank: bank,
-            bid_rate: bidRate,
-            settlement_rate: bidRate,
-            bid_volume: bidVol,
-            real_volume: 0,
-            price: 0,
-            status: "Chờ kết quả"
-          });
-        });
-
-        // Execute Auction Allocation Engine
-        let cutOffRate = baseRate;
-
-        if (auctionMethod === "rate") {
-          // Sort bids by competitive advantage
-          const isInjection = (action === 'Reverse Repo' || action === 'Buy Securities');
-          // In injection auctions, higher interest rate offered by bank is preferred by CB; in absorption, lower rate
-          if (isInjection) {
-            bids.sort((a, b) => b.bid_rate - a.bid_rate);
-          } else {
-            bids.sort((a, b) => a.bid_rate - b.bid_rate);
-          }
-
-          let remainingTarget = targetVolume;
-
-          bids.forEach((b, index) => {
-            b.rank = index + 1;
-            if (remainingTarget >= b.bid_volume) {
-              b.real_volume = b.bid_volume;
-              b.status = "Trúng thầu toàn bộ";
-              remainingTarget -= b.bid_volume;
-              cutOffRate = b.bid_rate;
-            } else if (remainingTarget > 0) {
-              b.real_volume = remainingTarget;
-              const ratio = Math.round((remainingTarget / b.bid_volume) * 100);
-              b.status = `Trúng thầu một phần (${ratio}%)`;
-              cutOffRate = b.bid_rate;
-              remainingTarget = 0;
-            } else {
-              b.real_volume = 0;
-              b.status = "Không trúng thầu";
-            }
-          });
-
-          // Determine Settlement Rate based on Pricing Mechanism
-          bids.forEach(b => {
-            if (b.real_volume > 0) {
-              b.settlement_rate = (pricingMechanism === 'single') ? cutOffRate : b.bid_rate;
-              b.price = this.calculatePrice(b.real_volume, b.settlement_rate, 30);
-            } else {
-              b.settlement_rate = b.bid_rate;
-              b.price = 0;
-            }
-          });
-
-        } else {
-          // Volume Auction: Pro-rata allocation
-          cutOffRate = userRate;
-          const totalBidVol = bids.reduce((sum, b) => sum + b.bid_volume, 0);
-          const allocationRatio = Math.min(1.0, targetVolume / totalBidVol);
-
-          bids.forEach(b => {
-            b.settlement_rate = userRate;
-            b.real_volume = Math.round((b.bid_volume * allocationRatio) / 100) * 100;
-            if (b.real_volume > 0) {
-              b.status = allocationRatio >= 1.0 ? "Trúng thầu toàn bộ" : `Trúng thầu pro-rata (${Math.round(allocationRatio * 100)}%)`;
-              b.price = this.calculatePrice(b.real_volume, userRate, 30);
-            } else {
-              b.status = "Không trúng thầu";
-              b.price = 0;
-            }
-          });
-        }
-
-        return { bids, cutOffRate };
-      }
-
-      // Execute full simulation step for a Phase
-      runPhase(phaseNum, scenarioDemand, decision) {
-        this.phase = phaseNum;
-        
-        // Calculate date offset (30 days per phase)
-        const phaseDate = this.addDays(this.startDate, (phaseNum - 1) * 30);
-        this.currentDate = phaseDate;
-
-        // 1. Calculate Maturity Schedule Cashflows
-        const { events, totalMaturityVolume } = this.calculateMaturityEvents(phaseDate);
-
-        // 2. Simulate Orderbook Bids
-        const { bids, cutOffRate } = this.simulateBankBids(
-          decision.omoAction,
-          decision.auctionMethod,
-          decision.pricingMechanism,
-          decision.volume,
-          decision.repoRate,
-          this.interbankRate
-        );
-
-        const totalRealizedVolume = bids.reduce((sum, b) => sum + b.real_volume, 0);
-
-        // 3. Central Bank Perspective Net Liquidity Calculation
-        // Repo / Sell Securities = Absorbs liquidity (-vol)
-        // Reverse Repo / Buy Securities = Injects liquidity (+vol)
-        const isInjection = (decision.omoAction === 'Reverse Repo' || decision.omoAction === 'Buy Securities');
-        const omoSupplyEffect = isInjection ? totalRealizedVolume : -totalRealizedVolume;
-
-        const realLiquidityDemand = scenarioDemand + this.unmetLiquidity;
-        const totalCashSupply = omoSupplyEffect + totalMaturityVolume;
-        const liquidityGap = realLiquidityDemand - totalCashSupply;
-
-        // Update unmet liquidity for next phase
-        this.unmetLiquidity = Math.max(0, -liquidityGap);
-
-        // 4. Interbank Rate Transmission Engine
-        let prevInterbank = this.interbankRate;
-        let postInterbank = prevInterbank;
-
-        // Rate adjusts dynamically based on remaining liquidity pressure gap
-        if (Math.abs(liquidityGap) <= 1000) {
-          // Well balanced liquidity
-          postInterbank = isInjection ? Math.max(3.0, prevInterbank - 0.15) : prevInterbank - 0.05;
-        } else if (liquidityGap < -1000) {
-          // Severe liquidity deficit remaining -> Interbank rate increases
-          postInterbank = prevInterbank + Math.min(0.60, (Math.abs(liquidityGap) / 5000) * 0.40);
-        } else {
-          // Excess liquidity surplus -> Interbank rate drops
-          postInterbank = Math.max(2.5, prevInterbank - (liquidityGap / 5000) * 0.35);
-        }
-
-        this.interbankRate = parseFloat(postInterbank.toFixed(2));
-
-        // 5. Store new position in active inventories for future phase maturity
-        const maturityDateStr = this.formatDate(this.addDays(phaseDate, 30));
-        const issueDateStr = this.formatDate(phaseDate);
-
-        if (totalRealizedVolume > 0) {
-          if (decision.omoAction === 'Sell Securities') {
-            this.tbillInventory.push({
-              id: `TB-30N-0${phaseNum}`,
-              issueDate: issueDateStr,
-              maturityDate: maturityDateStr,
-              rate: cutOffRate,
-              remainingVol: totalRealizedVolume,
-              faceValue: totalRealizedVolume
-            });
-          } else {
-            this.repoPositions.push({
-              id: `POS-P${phaseNum}`,
-              type: decision.omoAction,
-              issueDate: issueDateStr,
-              maturityDate: maturityDateStr,
-              rate: cutOffRate,
-              remainingVol: totalRealizedVolume,
-              price: this.calculatePrice(totalRealizedVolume, cutOffRate, 30)
-            });
-          }
-        }
-
-        // Return comprehensive result package
-        return {
-          phase: phaseNum,
-          phaseDate: phaseDate,
-          scenarioDemand,
-          unmetLiquidity: this.unmetLiquidity,
-          realLiquidityDemand,
-          omoSupplyEffect,
-          totalMaturityVolume,
-          totalCashSupply,
-          liquidityGap,
-          prevInterbank,
-          postInterbank: this.interbankRate,
-          cutOffRate,
-          bids,
-          events
-        };
-      }
-    }
-
-    // UI Controller Logic
-    let gameEngine = new CentralBankGameEngine();
+    // Thay vì dùng CentralBankGameEngine giả lập, ta dùng biến lưu trạng thái lấy từ Python
     let currentPhase = 1;
     let teamName = "Nhóm 1 – Central Bankers";
     let scores = { p1: null, p2: null, p3: null };
@@ -1023,15 +756,63 @@
     let chartInstance = null;
     let macroResultsChartInstance = null;
 
+    // HÀM MỚI: Gọi Python Backend khi người chơi chạy Phase
+    function runPhaseViaPython(scenarioDemand, decisionData) {
+        fetch('/api/run-phase', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                scenario_liquidity_demand: scenarioDemand,
+                decision: decisionData // { auction_method, omo_action, volume, pricing_method, repo_rate }
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                console.log("Đã cập nhật dữ liệu từ Python engine thành công!");
+                
+                // 1. Cập nhật lại giao diện bảng SBV Bill Inventory bằng dữ liệu chuẩn từ Python
+                // Python trả về mảng có chứa trường 'remaining_volume' đúng chuẩn
+                renderSBVBillTable(data.tbill_inventory); 
+
+                // 2. Cập nhật lại giao diện bảng Repo / Reverse Repo Inventory từ Python
+                renderRepoTable(data.repo_inventory);
+
+                // 3. Cập nhật mức lãi suất liên ngân hàng mới lên giao diện
+                updateInterbankRateUI(data.new_interbank_rate);
+                
+                // 4. Lưu kết quả phase nếu cần thiết để vẽ biểu đồ
+                currentPhase = data.phase;
+            }
+        })
+        .catch(error => console.error('Lỗi kết nối tới Python Backend:', error));
+    }
+
+    // HÀM MỚI: Lấy state ban đầu khi load trang web
+    function fetchGameState() {
+        fetch('/api/get-state')
+        .then(response => response.json())
+        .then(data => {
+            renderSBVBillTable(data.tbill_inventory);
+            renderRepoTable(data.repo_inventory);
+            updateInterbankRateUI(data.interbank_rate);
+        });
+    }
+
+    // Gọi hàm lấy state ngay khi trang vừa tải xong
+    document.addEventListener("DOMContentLoaded", () => {
+        fetchGameState();
+    });
+
     const phaseConfig = {
       1: {
-        title: "Phase 1: Phase 1",
+        title: "Phase 1",
         scenario: "Hệ thống ngân hàng đang chịu áp lực thiếu hụt thanh khoản ngắn hạn khoảng 1,900 Tỷ VND. Hãy cân nhắc bơm thanh khoản hợp lý để hạ nhiệt lãi suất liên ngân hàng.",
         indicators: {
-          gdp: "3.40%",
-          cpi: "3.97%",
           interbank: "3.95%",
-          liquidity: "-1,900 Tỷ"
+          liquidity: "1,900 Tỷ"
         },
         matTable: {
           billVol: "15,000",
@@ -1048,20 +829,15 @@
         chartData: [3.95, 3.95, 3.95, 3.95],
         preMetrics: {
           rate: 3.95,
-          liq: -1900,
-          dep: 4.95,
-          cpi: 3.97,
-          gdp: 3.40
+          liq: 1900,
         }
       },
       2: {
-        title: "Phase 2: Phase 2",
+        title: "Phase 2",
         scenario: "Nhu cầu thanh khoản gia tăng đột biến lên -3,500 Tỷ VND. Lãi suất LNH nhích lên 4.10%. Hãy dùng Đấu thầu Lãi suất để xác định mức chi phí vốn tối ưu cho thị trường.",
         indicators: {
-          gdp: "3.45%",
-          cpi: "3.95%",
           interbank: "4.10%",
-          liquidity: "-3,500 Tỷ"
+          liquidity: "3,500 Tỷ"
         },
         matTable: {
           billVol: "10,000",
@@ -1078,18 +854,13 @@
         chartData: [3.80, 3.92, 4.02, 4.10],
         preMetrics: {
           rate: 4.10,
-          liq: -3500,
-          dep: 5.10,
-          cpi: 3.95,
-          gdp: 3.45
+          liq: 3500,
         }
       },
       3: {
-        title: "Phase 3: Phase 3",
+        title: "Phase 3",
         scenario: "Dòng tiền trôi về hệ thống khiến thanh khoản dư thừa +6,000 Tỷ VND, làm lãi suất LNH giảm sâu xuống 3.20% và áp lực lạm phát CPI tăng. Hãy chủ động hút tiền.",
         indicators: {
-          gdp: "3.52%",
-          cpi: "4.23%",
           interbank: "3.20%",
           liquidity: "+6,000 Tỷ"
         },
@@ -1109,9 +880,6 @@
         preMetrics: {
           rate: 3.20,
           liq: 6000,
-          dep: 4.70,
-          cpi: 4.23,
-          gdp: 3.52
         }
       }
     };
@@ -1205,7 +973,6 @@
       }
     
       try {
-        // Gọi API khởi tạo game từ Flask Server Python
         const response = await fetch('http://127.0.0.1:5000/api/start-game', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -1222,11 +989,15 @@
           document.getElementById('phase-stepper').classList.remove('hidden');
           document.getElementById('nav-tabs').classList.remove('hidden');
     
+          if (data.tbill_inventory) {
+            renderMaturityTable(data.tbill_inventory);
+          }
+    
           loadPhase(1);
           switchTab('indicators');
           showToast(`⚡ Chào mừng ${teamName}!`, 'info');
         } else {
-          showToast('Lỗi khởi tạo game' + data.message, 'warning');
+          showToast('Lỗi khởi tạo game: ' + data.message, 'warning');
         }
       } catch (err) {
         showToast('Không thể kết nối tới Server', 'warning');
@@ -1250,69 +1021,61 @@
     }
 
     function loadPhase(phaseNum) {
-      currentPhase = phaseNum;
-      const cfg = phaseConfig[phaseNum];
+          currentPhase = phaseNum;
+          const cfg = phaseConfig[phaseNum];
+          if (!cfg) return;
 
-      isResultUnlocked = false;
-      const resBtn = document.getElementById('tab-btn-results');
-      if (resBtn) {
-        resBtn.disabled = true;
-        resBtn.innerHTML = "Results 🔒";
-        resBtn.title = "Cần gửi Quyết định OMO trước khi xem Kết quả";
-        resBtn.className = "px-2.5 sm:px-3 py-1 rounded-md text-xs font-semibold text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50 whitespace-nowrap";
-      }
+          isResultUnlocked = false;
+          const resBtn = document.getElementById('tab-btn-results');
+          if (resBtn) {
+            resBtn.disabled = true;
+            resBtn.innerHTML = "Results 🔒";
+            resBtn.title = "Cần gửi Quyết định OMO trước khi xem Kết quả";
+            resBtn.className = "px-2.5 sm:px-3 py-1 rounded-md text-xs font-semibold text-slate-400 dark:text-slate-600 cursor-not-allowed opacity-50 whitespace-nowrap";
+          }
 
-      for (let p = 1; p <= 3; p++) {
-        const badge = document.getElementById(`badge-p${p}`);
-        if (!badge) continue;
-        if (p === phaseNum) {
-          badge.className = "px-2.5 py-1 rounded bg-emerald-600 dark:bg-sky-600 text-white font-extrabold shadow-sm transition-all";
-        } else if (p < phaseNum) {
-          badge.className = "px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-bold transition-all";
-        } else {
-          badge.className = "px-2.5 py-1 rounded text-slate-400 dark:text-slate-500 font-medium transition-all opacity-70";
+          for (let p = 1; p <= 3; p++) {
+            const badge = document.getElementById(`badge-p${p}`);
+            if (!badge) continue;
+            if (p === phaseNum) {
+              badge.className = "px-2.5 py-1 rounded bg-emerald-600 dark:bg-sky-600 text-white font-extrabold shadow-sm transition-all";
+            } else if (p < phaseNum) {
+              badge.className = "px-2.5 py-1 rounded bg-emerald-100 dark:bg-emerald-950/80 text-emerald-800 dark:text-emerald-300 font-bold transition-all";
+            } else {
+              badge.className = "px-2.5 py-1 rounded text-slate-400 dark:text-slate-500 font-medium transition-all opacity-70";
+            }
+          }
+
+          // Gán an toàn các tiêu đề (tránh lỗi null)
+          const titleInd = document.getElementById('p-title-ind'); if (titleInd) titleInd.innerText = cfg.title;
+          const titleDec = document.getElementById('p-title-dec'); if (titleDec) titleDec.innerText = cfg.title;
+          const titleRes = document.getElementById('p-title-res'); if (titleRes) titleRes.innerText = cfg.title;
+
+          const scText = document.getElementById('scenario-text'); if (scText) scText.innerText = cfg.scenario;
+          const decScText = document.getElementById('decision-scenario-text'); if (decScText) decScText.innerText = cfg.scenario;
+
+          const indGdp = document.getElementById('ind-gdp'); if (indGdp) indGdp.innerText = cfg.indicators.gdp;
+          const indCpi = document.getElementById('ind-cpi'); if (indCpi) indCpi.innerText = cfg.indicators.cpi;
+          const indInter = document.getElementById('ind-interbank'); if (indInter) indInter.innerText = cfg.indicators.interbank;
+
+          const liqEl = document.getElementById('ind-liquidity');
+          if (liqEl) {
+            liqEl.innerText = cfg.indicators.liquidity;
+            liqEl.className = cfg.indicators.liquidity.startsWith('+') ? 
+              "font-mono font-bold text-emerald-600 dark:text-sky-400" : 
+              "font-mono font-bold text-rose-600 dark:text-rose-400";
+          }
+
+          const auctionMethod = document.getElementById('auctionMethod'); if (auctionMethod) auctionMethod.value = cfg.method;
+          const volumeInput = document.getElementById('volumeInput'); if (volumeInput) volumeInput.value = cfg.defaultVol;
+          const inputRate = document.getElementById('inputRate'); if (inputRate) inputRate.value = cfg.defaultRate.toFixed(2);
+
+          const omoActionSelect = document.getElementById('omoAction');
+          if (omoActionSelect) omoActionSelect.value = cfg.action;
+
+          if (typeof toggleRateVisibility === 'function') toggleRateVisibility();
+          if (typeof renderChart === 'function') renderChart(cfg.chartData);
         }
-      }
-
-      document.getElementById('p-title-ind').innerText = cfg.title;
-      document.getElementById('p-title-dec').innerText = cfg.title;
-      document.getElementById('p-title-res').innerText = cfg.title;
-
-      document.getElementById('scenario-text').innerText = cfg.scenario;
-      document.getElementById('decision-scenario-text').innerText = cfg.scenario;
-
-      document.getElementById('ind-gdp').innerText = cfg.indicators.gdp;
-      document.getElementById('ind-cpi').innerText = cfg.indicators.cpi;
-      document.getElementById('ind-interbank').innerText = cfg.indicators.interbank;
-
-      const liqEl = document.getElementById('ind-liquidity');
-      if (liqEl) {
-        liqEl.innerText = cfg.indicators.liquidity;
-        liqEl.className = cfg.indicators.liquidity.startsWith('+') ? 
-          "font-mono font-bold text-emerald-600 dark:text-sky-400" : 
-          "font-mono font-bold text-rose-600 dark:text-rose-400";
-      }
-
-      if (cfg.matTable) {
-        document.getElementById('mat-tb-bill-vol').innerText = cfg.matTable.billVol;
-        document.getElementById('mat-tb-bill-rate').innerText = cfg.matTable.billRate;
-        document.getElementById('mat-tb-repo-vol').innerText = cfg.matTable.repoVol;
-        document.getElementById('mat-tb-repo-rate').innerText = cfg.matTable.repoRate;
-        document.getElementById('mat-tb-rev-vol').innerText = cfg.matTable.revVol;
-        document.getElementById('mat-tb-rev-rate').innerText = cfg.matTable.revRate;
-      }
-
-      document.getElementById('auctionMethod').value = cfg.method;
-      document.getElementById('volumeInput').value = cfg.defaultVol;
-      document.getElementById('inputRate').value = cfg.defaultRate.toFixed(2);
-
-      const omoActionSelect = document.getElementById('omoAction');
-      if (omoActionSelect) omoActionSelect.value = cfg.action;
-
-      toggleRateVisibility();
-      renderChart(cfg.chartData);
-    }
-
     function switchTab(tabName) {
       if (tabName === 'results' && !isResultUnlocked) {
         showToast("⚠️ Vui lòng nhấn 'SUBMIT OMO DECISION' ở Tab Decisions trước khi xem Kết quả!", "warning");
@@ -1386,8 +1149,11 @@
             resBtn.innerHTML = "Results";
             resBtn.title = "Xem kết quả OMO";
           }
-    
-          document.getElementById('res-eval-title').innerText = `Phase ${currentPhase} Executed via Python Backend`;
+          if (result.tbill_inventory) {
+            renderMaturityTable(result.tbill_inventory);
+          }
+          document.getElementById('res-eval-title').innerText = `Phase ${currentPhase} Executed`;
+          document.getElementById('res-eval-title').innerText = `Phase ${currentPhase} Executed`;
           document.getElementById('res-analysis').innerText = 
             `Nghiệp vụ ${action} (${volume.toLocaleString()} Tỷ) đã thực thi. Lãi suất LNH chuyển dịch từ ${result.previous_interbank_rate.toFixed(2)}% về ${result.interbank_rate.toFixed(2)}%.`;
     
@@ -1436,6 +1202,7 @@
         console.error(err);
       }
     }
+    
     function renderMacroResultsChart(preRate, postRate, preDep, postDep, preCpi, postCpi) {
       const ctx = document.getElementById('macroResultsChart');
       if (!ctx) return;
@@ -1512,9 +1279,7 @@
       document.getElementById('tab-content-decisions').classList.add('hidden');
       document.getElementById('tab-content-results').classList.add('hidden');
       document.getElementById('tab-content-summary').classList.remove('hidden');
-
       document.getElementById('summary-team-title').innerText = `Team: ${teamName}`;
-
       document.getElementById('card-score-p1').innerText = scores.p1 || 88;
       document.getElementById('card-score-p2').innerText = scores.p2 || 90;
       document.getElementById('card-score-p3').innerText = scores.p3 || 92;
@@ -1530,7 +1295,129 @@
         reviewText.innerText = `CẦN CẢI THIỆN (${avgScore}/100). Quyết định bơm/rút tiền ở các Phase chưa bám sát nhu cầu thanh khoản thực tế, khiến lãi suất liên ngân hàng biến động mạnh.`;
       }
     }
+    if (typeof gameEngine !== 'undefined') {
+        renderPythonStyleResultTables(gameEngine);
+      }
+    function renderPythonStyleResultTables(engineInstance) {
+      if (!engineInstance) return;
 
+      // 1. SBV BILL INVENTORY
+      const sbvBody = document.getElementById('res-sbv-bill-body');
+      if (sbvBody) {
+        let html = '';
+        // Lấy danh sách tín phiếu từ engine
+        const bills = engineInstance.tbillInventory || engineInstance.sbvBills || [];
+        
+        if (bills.length === 0) {
+          html = `<tr><td colspan="5" class="text-center py-2 text-slate-400">Trống</td></tr>`;
+        } else {
+          bills.forEach(b => {
+            const id = b.id || b.sbv_bill_id || '-';
+            const issueDate = b.issueDate || b.issue_date || '-';
+            const maturity = b.maturityDate || b.maturity_date || '-';
+            const rate = b.rate !== undefined ? b.rate : (b.interest_rate || 0);
+            const volume = b.remainingVol || b.remaining_volume || b.volume || 0;
+
+            html += `
+              <tr>
+                <td class="py-1 text-left font-semibold text-slate-800 dark:text-slate-200">${id}</td>
+                <td class="py-1 text-left">${issueDate}</td>
+                <td class="py-1 text-left">${maturity}</td>
+                <td class="py-1 text-right">${Number(rate).toFixed(2)}%</td>
+                <td class="py-1 text-right font-bold text-emerald-600 dark:text-sky-400">${Number(volume).toLocaleString()}</td>
+              </tr>
+            `;
+          });
+        }
+        sbvBody.innerHTML = html;
+      }
+
+      // 2. REPO / REVERSE REPO INVENTORY
+      const repoBody = document.getElementById('res-repo-body');
+      if (repoBody) {
+        let html = '';
+        // Lấy danh sách Repo/Reverse Repo từ engine
+        const repos = engineInstance.repoPositions || engineInstance.repos || [];
+        
+        if (repos.length === 0) {
+          html = `<tr><td colspan="6" class="text-center py-2 text-slate-400">Trống</td></tr>`;
+        } else {
+          repos.forEach(r => {
+            const id = r.id || r.repo_id || '-';
+            const issueDate = r.issueDate || r.issue_date || '-';
+            const maturity = r.maturityDate || r.maturity_date || '-';
+            const rate = r.rate !== undefined ? r.rate : (r.interest_rate || 0);
+            const volume = r.volume || r.remainingVol || r.remaining_volume || 0;
+            const price = r.price || r.execution_price || 0;
+
+            html += `
+              <tr>
+                <td class="py-1 text-left font-semibold text-slate-800 dark:text-slate-200">${id}</td>
+                <td class="py-1 text-left">${issueDate}</td>
+                <td class="py-1 text-left">${maturity}</td>
+                <td class="py-1 text-right">${Number(rate).toFixed(2)}%</td>
+                <td class="py-1 text-right">${Number(volume).toLocaleString()}</td>
+                <td class="py-1 text-right font-bold text-sky-600 dark:text-sky-400">${Number(price).toFixed(2)}</td>
+              </tr>
+            `;
+          });
+        }
+        repoBody.innerHTML = html;
+      }
+
+      // 3. MATURITY & TOTAL CASH FLOW
+      const matBody = document.getElementById('res-maturity-body');
+      const totalCfEl = document.getElementById('res-total-cash-flow');
+      
+      if (matBody) {
+        let html = '';
+        let events = [];
+        
+        // Gọi hàm tính toán đáo hạn của engine hoặc lấy trực tiếp mảng sự kiện
+        if (typeof engineInstance.calculateMaturityEvents === 'function') {
+          const matData = engineInstance.calculateMaturityEvents(engineInstance.currentDate);
+          events = matData.events || matData || [];
+        } else if (engineInstance.maturityEvents) {
+          events = engineInstance.maturityEvents;
+        }
+
+        let totalCF = 0;
+
+        if (events.length === 0) {
+          html = `<tr><td colspan="5" class="text-center py-2 text-slate-400">Trống</td></tr>`;
+        } else {
+          events.forEach(ev => {
+            const id = ev.id || ev.item_id || '-';
+            const issueDate = ev.issue_date || ev.issueDate || '-';
+            const maturity = ev.maturity_date || ev.maturityDate || '-';
+            const rate = ev.rate !== undefined ? ev.rate : (ev.interest_rate || 0);
+            const cf = ev.cash_flow !== undefined ? ev.cash_flow : (ev.cashFlow || 0);
+            
+            totalCF += Number(cf);
+            const cfClass = cf >= 0 ? 'text-emerald-600 dark:text-sky-400' : 'text-rose-600 dark:text-rose-400';
+            
+            html += `
+              <tr>
+                <td class="py-1 text-left font-semibold text-slate-800 dark:text-slate-200">${id}</td>
+                <td class="py-1 text-left">${issueDate}</td>
+                <td class="py-1 text-left">${maturity}</td>
+                <td class="py-1 text-right">${Number(rate).toFixed(2)}%</td>
+                <td class="py-1 text-right font-bold ${cfClass}">${Number(cf).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</td>
+              </tr>
+            `;
+          });
+        }
+        matBody.innerHTML = html;
+
+        // Cập nhật tổng dòng tiền (Total Cash Flow) ở footer bảng 3
+        if (totalCfEl) {
+          totalCfEl.textContent = totalCF.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+          totalCfEl.className = totalCF >= 0 
+            ? 'font-mono text-xs font-bold text-emerald-600 dark:text-sky-400' 
+            : 'font-mono text-xs font-bold text-rose-600 dark:text-rose-400';
+        }
+      }
+    }
     function renderChart(chartData) {
       const ctx = document.getElementById('indicatorsChart');
       if (!ctx) return;
@@ -1601,8 +1488,38 @@
     window.nextPhase = nextPhase;
     window.showSummary = showSummary;
 
+    function renderMaturityTable(tbillList) {
+      const tbody = document.getElementById('maturity-table-body');
+      if (!tbody) return;
+      
+      if (!tbillList || tbillList.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="4" class="text-center py-2 text-slate-400">Không có tín phiếu đang lưu hành</td></tr>`;
+        return;
+      }
+
+      let html = '';
+      tbillList.forEach(tb => {
+        html += `
+          <tr>
+            <td class="font-sans font-semibold py-1.5 px-2 text-left text-slate-800 dark:text-slate-200">
+              ${tb.sbv_bill_id}
+            </td>
+            <td class="py-1.5 px-2 text-center font-bold text-emerald-600 dark:text-sky-400">
+              ${tb.remaining_volume.toLocaleString()}
+            </td>
+            <td class="py-1.5 px-2 text-right text-slate-700 dark:text-slate-300">
+              ${tb.rate.toFixed(2)}%
+            </td>
+            <td class="py-1.5 px-2 text-right font-mono text-slate-600 dark:text-slate-400">
+              ${tb.maturity_date}
+            </td>
+          </tr>
+        `;
+      });
+      tbody.innerHTML = html;
+    }
+    
      // TEMPORARY DEBUG - Decision Contract
-     // ================================
     function debugDecisionContract() {
       const method = document.getElementById('auctionMethod').value;
       const pricing = document.getElementById('pricingMechanism').value;
