@@ -1328,12 +1328,12 @@
 
     function submitDecision() {
       const vol = parseInt(document.getElementById('volumeInput').value) || 5000;
+      const method = document.getElementById('auctionMethod').value;
       const userRate =
         method === 'Volume auction'
         ? parseFloat(document.getElementById('inputRate').value)
         : null;
       const action = document.getElementById('omoAction').value;
-      const method = document.getElementById('auctionMethod').value;
       const pricing =
         method === 'Interest-rate auction'
         ? document.getElementById('pricingMechanism').value
@@ -1350,11 +1350,13 @@
       // Run Decision through Central Bank Engine
       const decisionObj = {
         auction_method: method,
-        pricing_method: pricing,
+        pricing_method: method === 'Interest-rate auction' ? pricing : null,
         omo_action: action,
         volume: vol,
-        repo_rate: userRate
-    };
+        repo_rate: method === 'Volume auction' ? userRate : null
+      };
+    
+      console.log("DEBUG DECISION CONTRACT:", decisionObj);
 
       const result = gameEngine.runPhase(currentPhase, scenarioDemand, decisionObj);
 
