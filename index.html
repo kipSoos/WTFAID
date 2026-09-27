@@ -1342,7 +1342,9 @@
       method === 'Interest-rate auction'
         ? document.getElementById('pricingMechanism').value
         : null;
-
+    const cfg = phaseConfig[currentPhase];
+    const scenarioDemand = cfg.preMetrics.liq;
+    const pre = cfg.preMetrics;
 
   // ===== BƯỚC MỚI: TẠO DECISION CONTRACT =====
     const decisionContract = {
@@ -1352,8 +1354,6 @@
       volume: vol,
       repo_rate: userRate
     };
-
-
   // ===== TẠM THỜI: ADAPTER SANG FORMAT CŨ =====
     const legacyDecision = {
       auctionMethod:
@@ -1368,7 +1368,6 @@
             ? 'multi'
             : null,
     
-      // Giữ OMO Action theo vocabulary chuẩn hóa
       omoAction: action,
     
       volume: vol,
